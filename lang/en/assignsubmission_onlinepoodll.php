@@ -32,11 +32,14 @@ $string['onlinepoodll'] = 'Online PoodLL';
 $string['onlinepoodllfilename'] = 'onlinepoodll.html';
 $string['onlinepoodllsubmission'] = 'Allow online PoodLL submission';
 $string['pluginname'] = 'Online PoodLL submissions';
-$string['recordertype'] = 'PoodLL Recorder Type';
+$string['recordertype'] = 'PoodLL Rec. Type';
 $string['replymp3voice'] = 'MP3 Voice Recorder';
 $string['replyvoice'] = 'Voice Recorder (Red5)';
 $string['replyvideo'] = 'Video Recorder';
 $string['replywhiteboard'] = 'Whiteboard';
 $string['replysnapshot'] = 'Snapshot';
 $string['replytalkback'] = 'Talkback';
+$string['backimage'] = 'PoodLL Whiteboard Back';
+$string['boardsize'] = 'PoodLL WhiteBoard Size';
+$string['timelimit'] = 'PoodLL Rec. Time Limit';
 
