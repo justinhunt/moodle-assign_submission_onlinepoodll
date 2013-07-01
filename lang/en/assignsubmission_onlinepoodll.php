@@ -43,4 +43,16 @@ $string['backimage'] = 'PoodLL Whiteboard Back';
 $string['boardsize'] = 'PoodLL WhiteBoard Size';
 $string['timelimit'] = 'PoodLL Rec. Time Limit';
 $string['currentsubmission'] = 'Current Submission:';
+$string['yes'] = 'yes';
+$string['no'] = 'no';
+$string['allowedrecorders'] = 'Recorders to enable';
+$string['allowedrecordersdetails'] = '';
+$string['showcurrentsubmission'] = 'Show Current Submission';
+$string['showcurrentsubmissiondetails'] = 'Show previously recorded submission on submission form.';
+$string['displaysizesingle'] = 'Default video player size(grading etc)';
+$string['displaysizesingledetails'] = '';
+$string['displaysizelist'] = 'Video player size on summary pages';
+$string['displaysizelistdetails'] = '';
+$string['placeholderonly'] = 'No video player';
+$string['videoplaceholder'] = ' [video not displayed here] ';
 
