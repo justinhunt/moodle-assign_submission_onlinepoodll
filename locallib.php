@@ -646,7 +646,10 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 					$submissionid, "id", false);
 					
         if (!empty($files)) {
-            require_once($CFG->dirroot . '/mod/assignment/locallib.php');
+        	//this was nec for portfolios prior to M2.7. 
+        	if(file_exists($CFG->dirroot . '/mod/assignment/locallib.php')){
+            	require_once($CFG->dirroot . '/mod/assignment/locallib.php');
+            }
             if ($CFG->enableportfolios) {
                 require_once($CFG->libdir.'/portfoliolib.php');
             }
