@@ -60,6 +60,21 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2013120500, 'assignsubmission', 'onlinepoodll');
     
     }
+    
+    //add vectordata field.
+   if ($oldversion < 2014052200) {
+
+        // Define field vectordata to be added to assignsubmission_onlinepoodl.
+        $table = new xmldb_table('assignsubmission_onlinepoodl');
+        $field = new xmldb_field('vectordata', XMLDB_TYPE_TEXT, null, null, null, null, null, 'filename');
+
+        // Conditionally launch add field vectordata.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // online PoodLL savepoint reached
+        upgrade_plugin_savepoint(true, 2014052200, 'assignsubmission', 'onlinepoodll');
+    }
 
     return true;
 }

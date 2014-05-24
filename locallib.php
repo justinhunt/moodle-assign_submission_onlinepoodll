@@ -51,6 +51,7 @@ define('OP_REPLYTALKBACK',5);
 
 
 define('OP_FILENAMECONTROL','onlinepoodll');
+define('OP_VECTORCONTROL','onlinepoodll_vector');
 
 
 
@@ -271,6 +272,17 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				$this->fetchResponses($submission->id,false,false));
 			
         }
+        
+         if (!isset($data->vectordata)) {
+            $data->vectordata = '';
+        }
+        if ($submission) {
+            $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
+            if ($onlinepoodllsubmission) {
+                $data->vectordata = $onlinepoodllsubmission->vectordata;
+            }
+
+        }
 
 		//We prepare our form here and fetch/save data in SAVE method
 		$usercontextid=context_user::instance($USER->id)->id;
@@ -280,9 +292,11 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->addElement('hidden', 'draftitemid', $draftitemid);
 		$mform->addElement('hidden', 'usercontextid', $usercontextid);	
 		$mform->addElement('hidden', OP_FILENAMECONTROL, '',array('id' => OP_FILENAMECONTROL));
+		$mform->addElement('hidden', OP_VECTORCONTROL, $data->vectordata,array('id' => OP_VECTORCONTROL));
 		$mform->setType('draftitemid', PARAM_INT);
 		$mform->setType('usercontextid', PARAM_INT); 
 		$mform->setType(OP_FILENAMECONTROL, PARAM_TEXT); 
+		$mform->setType(OP_VECTORCONTROL, PARAM_TEXT); 
 	
 		//get timelimit for recorders if set
 		$timelimit = $this->get_config('timelimit');
@@ -331,8 +345,10 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 								$file->get_itemid());
 				
 				}
-	
-				$mediadata= fetchWhiteboardForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid, $width, $height, $imageurl);
+				
+				$vectorcontrol = OP_VECTORCONTROL;
+				$vectordata=$data->vectordata;
+				$mediadata= fetchWhiteboardForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid, $width, $height, $imageurl,'','',$vectorcontrol,$vectordata);
 				$mform->addElement('static', 'description', '',$mediadata);
 				break;
 			
@@ -494,8 +510,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		if(!$filename){return true;}
 		
         $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
+        //fetch any vectordata we might have for the whiteboard
+        $vectordata = optional_param(OP_VECTORCONTROL, '', PARAM_RAW);
+        
         if ($onlinepoodllsubmission) {
 			$onlinepoodllsubmission->filename = $filename;
+			$onlinepoodllsubmission->vectordata = $vectordata;
             return $DB->update_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission);
         } else {
             $onlinepoodllsubmission = new stdClass();
@@ -503,6 +523,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $onlinepoodllsubmission->assignment = $this->assignment->get_instance()->id;
             $onlinepoodllsubmission->recorder = $this->get_config('recordertype');
 			$onlinepoodllsubmission->filename = $filename;
+			$onlinepoodllsubmission->vectordata = $vectordata;
             return $DB->insert_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission) > 0;
         }
 
