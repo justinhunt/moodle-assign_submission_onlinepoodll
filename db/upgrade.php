@@ -52,9 +52,12 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
 	//add filename field.
     if ($oldversion < 2013120500) {
     	$table = new xmldb_table('assignsubmission_onlinepoodl');	
-		$table->add_field('filename', XMLDB_TYPE_TEXT, 'small', null,
-                null, null, null);
+    	 $field = new xmldb_field('filename', XMLDB_TYPE_TEXT, null, null, null, null, null, 'recorder');
 
+		// Conditionally launch add field filename.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 		
 		 // online PoodLL savepoint reached
         upgrade_plugin_savepoint(true, 2013120500, 'assignsubmission', 'onlinepoodll');
@@ -63,9 +66,21 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
     
     //add vectordata field.
    if ($oldversion < 2014052200) {
+   
 
-        // Define field vectordata to be added to assignsubmission_onlinepoodl.
+        
         $table = new xmldb_table('assignsubmission_onlinepoodl');
+        
+        //bug in previous version means that filename field was not added properly.
+        //if that is the case, add it now.
+         $field = new xmldb_field('filename', XMLDB_TYPE_TEXT, null, null, null, null, null, 'recorder');
+
+		// Conditionally launch add field filename.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+        // Define field vectordata to be added to assignsubmission_onlinepoodl.
         $field = new xmldb_field('vectordata', XMLDB_TYPE_TEXT, null, null, null, null, null, 'filename');
 
         // Conditionally launch add field vectordata.
