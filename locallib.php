@@ -427,7 +427,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				
 		}else{	
 			//The path to any media file we should play
-			$rawmediapath = $CFG->wwwroot.'/pluginfile.php/'.$this->assignment->get_context()->id.'/assignsubmission_onlinepoodll/' . ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA  . '/'.$submissionid.'/'.$filename;
+			$rawmediapath = $CFG->wwwroot.'/pluginfile.php/'.$this->assignment->get_context()->id.'/'. ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT .'/' . ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA  . '/'.$submissionid.'/'.$filename;
 			$mediapath = urlencode($rawmediapath);
 		
 			//prepare our response string, which will parsed and replaced with the necessary player
@@ -684,7 +684,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                    
 					$button->set_callback_options('assign_portfolio_caller', 
 							array('cmid' => $this->assignment->get_course_module()->id,
-											'component' => "assignsubmission_onlinepoodll",
+											'component' => ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT,
 											'area'=>ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA,
 											'sid' => $submissionid),
 							'/mod/assign/portfolio_callback.php');

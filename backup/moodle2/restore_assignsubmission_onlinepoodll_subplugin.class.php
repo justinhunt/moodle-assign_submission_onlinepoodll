@@ -21,8 +21,12 @@
  * @copyright 2012 Justin Hunt {@link http://www.poodll.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
- define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
+
+if ( ! defined( 'ASSIGNSUBMISSION_ONLINEPOODLL_TABLE' ) ){ 
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT', 'assignsubmission_onlinepoodll');
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA', 'submissions_onlinepoodll');
+}
 
 /**
  * restore subplugin class that provides the necessary information needed to restore one assign_submission subplugin.
@@ -65,7 +69,7 @@ class restore_assignsubmission_onlinepoodll_subplugin extends restore_subplugin 
 
         $DB->insert_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $data);
 
-        $this->add_related_files(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, 'submissions_onlinepoodll', 'submission', null, $oldsubmissionid);
+        $this->add_related_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA, 'submission', null, $oldsubmissionid);
     }
 
 }

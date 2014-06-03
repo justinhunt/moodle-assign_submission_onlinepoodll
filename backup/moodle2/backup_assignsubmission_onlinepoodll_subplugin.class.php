@@ -24,7 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
+if ( ! defined( 'ASSIGNSUBMISSION_ONLINEPOODLL_TABLE' ) ){ 
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT', 'assignsubmission_onlinepoodll');
+	define('ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA', 'submissions_onlinepoodll');
+}
 
 /**
  * Provides the information to backup onlinepoodll submissions
@@ -56,7 +60,7 @@ class backup_assignsubmission_onlinepoodll_subplugin extends backup_subplugin {
         // set source to populate the data
         $subpluginelement->set_source_table(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, array('submission' => backup::VAR_PARENTID));
 
-        $subpluginelement->annotate_files(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, 'submissions_onlinepoodll', 'submission');
+        $subpluginelement->annotate_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, 'submissions_onlinepoodll', 'submission');
         return $subplugin;
     }
 
