@@ -598,6 +598,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
 		//our response, this will output a player/image, and optionally a portfolio export link
 		return $this->fetchResponses($submission->id,false,false,$size) . $this->get_p_links($submission->id) ;
+		//rely on get_files from now on to generate portfolio links Justin 19/06/2014
+		//return $this->fetchResponses($submission->id,false,false,$size) ;
 
 		//the default return method, this just produces a link.
       // return $this->assignment->render_area_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA, $submission->id);
@@ -616,6 +618,16 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         $files = $fs->get_area_files($this->assignment->get_context()->id, ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA, $submission->id, "timemodified", false);
 
         foreach ($files as $file) {
+		
+			//let NOT return splash images for videos
+			if($this->get_config('recordertype')== OP_REPLYVIDEO){
+				$fname = $file->get_filename();
+				$fext = pathinfo($fname, PATHINFO_EXTENSION);				
+				if($fext == 'jpg' || $fext == 'png'){
+					continue;
+				}
+			}
+		
             $result[$file->get_filename()] = $file;
         }
         return $result;
@@ -677,22 +689,40 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             
 			//Add portfolio download links if appropriate
             foreach ($files as $file) {
-					
-                if ($CFG->enableportfolios && has_capability('mod/assign:exportownsubmission', $this->assignment->get_context())){
+				
+				//in the case of splash images we will have two files.
+				//we just want one link, and for the video file
+				if($this->get_config('recordertype')== OP_REPLYVIDEO){
+					$fname = $file->get_filename();
+					$fext = pathinfo($fname, PATHINFO_EXTENSION);				
+					if($fext == 'jpg' || $fext == 'png'){
+						continue;
+					}
+				}
+                
+				
+				if ($CFG->enableportfolios && has_capability('mod/assign:exportownsubmission', $this->assignment->get_context())){
 					require_once($CFG->libdir . '/portfoliolib.php');
 					$button = new portfolio_add_button();
                    
+				   //API changes. See https://github.com/moodle/moodle/blob/master/portfolio/upgrade.txt#L6
+				   if($CFG->version < 2012120300){
+						$finalparam='/mod/assign/portfolio_callback.php';
+					}else{
+						$finalparam='mod_assign';
+					}
+				   
 					$button->set_callback_options('assign_portfolio_caller', 
 							array('cmid' => $this->assignment->get_course_module()->id,
 											'component' => ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT,
 											'area'=>ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA,
 											'sid' => $submissionid),
-							'/mod/assign/portfolio_callback.php');
+							$finalparam);
                     $button->set_format_by_file($file);
                     $output .= $button->to_html(PORTFOLIO_ADD_TEXT_LINK);
                 }
                
-                $output .= '<br />';
+                $output .= '<br />' ;
             }
         }
 
