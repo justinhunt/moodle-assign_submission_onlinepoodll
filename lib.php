@@ -72,5 +72,6 @@ function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context
     if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
         return false;
     }
-    send_stored_file($file, 0, 0, true); // download MUST be forced - security!
+    $forcedownload = ($filearea !='onlinepoodll_backimage');
+    send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
 }

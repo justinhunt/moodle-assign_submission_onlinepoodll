@@ -23,9 +23,6 @@
  * @copyright 2012 Justin Hunt {@link http://www.poodll.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
-//Get our poodll resource handling lib
-require_once($CFG->dirroot . '/filter/poodll/poodllresourcelib.php');
 
 /** Include eventslib.php */
 require_once($CFG->libdir.'/eventslib.php');
@@ -305,13 +302,13 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		switch($this->get_config('recordertype')){
 			
 			case OP_REPLYVOICE:
-				$mediadata= fetchAudioRecorderForSubmission('swf','onlinepoodll',OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
+				$mediadata= \filter_poodll\poodlltools::fetchAudioRecorderForSubmission('swf','onlinepoodll',OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
 				$mform->addElement('static', 'description', '',$mediadata);
 
 				break;
 				
 			case OP_REPLYMP3VOICE:
-				$mediadata= fetchMP3RecorderForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
+				$mediadata= \filter_poodll\poodlltools::fetchMP3RecorderForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
 				$mform->addElement('static', 'description', '',$mediadata);
 				break;
 				
@@ -348,17 +345,17 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				
 				$vectorcontrol = OP_VECTORCONTROL;
 				$vectordata=$data->vectordata;
-				$mediadata= fetchWhiteboardForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid, $width, $height, $imageurl,'','',$vectorcontrol,$vectordata);
+				$mediadata= \filter_poodll\poodlltools::fetchWhiteboardForSubmission(OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid, $width, $height, $imageurl,'','',$vectorcontrol,$vectordata);
 				$mform->addElement('static', 'description', '',$mediadata);
 				break;
 			
 			case OP_REPLYSNAPSHOT:
-				$mediadata= fetchSnapshotCameraForSubmission(OP_FILENAMECONTROL,"snap.jpg" ,350,400,$usercontextid ,'user','draft',$draftitemid);
+				$mediadata= \filter_poodll\poodlltools::fetchSnapshotCameraforSubmission(OP_FILENAMECONTROL,"snap.jpg" ,350,400,$usercontextid ,'user','draft',$draftitemid);
 				$mform->addElement('static', 'description', '',$mediadata);
 				break;
 
 			case OP_REPLYVIDEO:
-				$mediadata= fetchVideoRecorderForSubmission('swf','onlinepoodll',OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
+				$mediadata= \filter_poodll\poodlltools::fetchVideoRecorderForSubmission('swf','onlinepoodll',OP_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid,$timelimit);
 				$mform->addElement('static', 'description', '',$mediadata);			
 									
 				break;
@@ -508,15 +505,15 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		//if filename is false, no update. possibly used changed something else on page
 		$filename = $this->shift_draft_file($submission);
 		if(!$filename){return true;}
-		
+
         $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
         //fetch any vectordata we might have for the whiteboard
         $vectordata = optional_param(OP_VECTORCONTROL, '', PARAM_RAW);
-        
+
         if ($onlinepoodllsubmission) {
 			$onlinepoodllsubmission->filename = $filename;
 			$onlinepoodllsubmission->vectordata = $vectordata;
-            return $DB->update_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission);
+			$ret = $DB->update_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission);
         } else {
             $onlinepoodllsubmission = new stdClass();
             $onlinepoodllsubmission->submission = $submission->id;
@@ -524,9 +521,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $onlinepoodllsubmission->recorder = $this->get_config('recordertype');
 			$onlinepoodllsubmission->filename = $filename;
 			$onlinepoodllsubmission->vectordata = $vectordata;
-            return $DB->insert_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission) > 0;
+            $ret = $DB->insert_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $onlinepoodllsubmission) > 0;
         }
-
+		 return $ret;
 
     }
     
@@ -537,10 +534,11 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		//When we add the recorder via the poodll filter, it adds a hidden form field of the name OP_FILENAMECONTROL
 		//the recorder updates that field with the filename of the audio/video it recorded. We pick up that filename here.
 
+
 		$filename = optional_param(OP_FILENAMECONTROL, '', PARAM_RAW);
 		$draftitemid = optional_param('draftitemid', '', PARAM_RAW);
 		$usercontextid = optional_param('usercontextid', '', PARAM_RAW);
-		
+
 		//Don't do anything in the case that the filename is empty
 		//possibly the user is just updating something else on the page(eg an online text submission)
 		//if we overwrite here, we might trash their existing poodll submission file
@@ -550,12 +548,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		 $browser = get_file_browser();
          $fs->delete_area_files($this->assignment->get_context()->id, ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT,ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA , $submission->id);
 
-		
+
 		//fetch the file info object for our original file
 		$original_context = context::instance_by_id($usercontextid);
 		$draft_fileinfo = $browser->get_file_info($original_context, 'user','draft', $draftitemid, '/', $filename);
-	
-		//perform the copy	
+
+		//perform the copy
 		if($draft_fileinfo){
 			
 			//create the file record for our new file
@@ -575,7 +573,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 			$ret = $draft_fileinfo->copy_to_storage($file_record);
 			
 		}//end of if $draft_fileinfo
-		
+
 		return $filename;
 
 	}//end of shift_draft_file
