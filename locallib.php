@@ -31,25 +31,25 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * File area/component/table name for online text submission assignment
  */
-define('ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA', 'submissions_onlinepoodll');
-define('ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT', 'assignsubmission_onlinepoodll');
-define('ASSIGNSUBMISSION_ONLINEPOODLL_CONFIG_COMPONENT', 'assignsubmission_onlinepoodll');
-define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
-define('ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA', 'onlinepoodll_backimage');
-
+ if(!defined('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE')){
+   define('ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA', 'submissions_onlinepoodll');
+   define('ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT', 'assignsubmission_onlinepoodll');
+   define('ASSIGNSUBMISSION_ONLINEPOODLL_CONFIG_COMPONENT', 'assignsubmission_onlinepoodll');
+   define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
+   define('ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA', 'onlinepoodll_backimage');
+}
 
 //some constants for the type of online poodll assignment
-define('OP_REPLYMP3VOICE',0);
-define('OP_REPLYVOICE',1);
-define('OP_REPLYVIDEO',2);
-define('OP_REPLYWHITEBOARD',3);
-define('OP_REPLYSNAPSHOT',4);
-define('OP_REPLYTALKBACK',5);
-
-
-define('OP_FILENAMECONTROL','onlinepoodll');
-define('OP_VECTORCONTROL','onlinepoodll_vector');
-
+if(!defined('OP_REPLYMP3VOICE')){
+	define('OP_REPLYMP3VOICE',0);
+	define('OP_REPLYVOICE',1);
+	define('OP_REPLYVIDEO',2);
+	define('OP_REPLYWHITEBOARD',3);
+	define('OP_REPLYSNAPSHOT',4);
+	define('OP_REPLYTALKBACK',5);
+	define('OP_FILENAMECONTROL','onlinepoodll');
+	define('OP_VECTORCONTROL','onlinepoodll_vector');
+}
 
 
 /**
@@ -166,7 +166,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				'500x500' => '500x500',
 				'600x400' => '600x400',
 				'600x800' => '600x800',
-				'800x600' => '800x600'
+				'800x600' => '800x600',
+				'1000x800' => '1000x800',
+				'1024x768' => '1024x768'
 				);
 			$mform->addElement('select', 'assignsubmission_onlinepoodll_boardsize',
 				get_string('boardsize', 'assignsubmission_onlinepoodll'), $boardsizes);
@@ -321,6 +323,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 					case "600x400": $width=600;$height=400;break;
 					case "600x800": $width=600;$height=800;break;
 					case "800x600": $width=800;$height=600;break;
+					case "1000x800": $width=1000;$height=800;break;
+					case "1024x768": $width=1024;$height=768;break;
 				}
 
 

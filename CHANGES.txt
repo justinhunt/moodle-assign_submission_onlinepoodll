@@ -1,5 +1,9 @@
 Change List
 =========
+Version 2016081402
+Fixed an issue with constant declaration that could mess up behat
+Added two new sizes for whiteboard. 
+
 Version 2016081401
 Version bump(big) for PoodLL 3 support, but no major changes
 
