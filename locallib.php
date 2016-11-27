@@ -354,7 +354,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				break;
 			
 			case OP_REPLYSNAPSHOT:
-				$mediadata= \filter_poodll\poodlltools::fetchSnapshotCameraforSubmission(OP_FILENAMECONTROL,"snap.jpg" ,350,400,$usercontextid ,'user','draft',$draftitemid);
+				//$mediadata= \filter_poodll\poodlltools::fetchSnapshotCameraforSubmission(OP_FILENAMECONTROL,"snap.jpg" ,350,400,$usercontextid ,'user','draft',$draftitemid);
+				$mediadata= \filter_poodll\poodlltools::fetchHTML5SnapshotCamera(OP_FILENAMECONTROL,350,400,$usercontextid,'user','draft',$draftitemid);
 				$mform->addElement('static', 'description', '',$mediadata);
 				break;
 
