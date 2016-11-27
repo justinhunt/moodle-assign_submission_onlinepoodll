@@ -437,18 +437,13 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 							
 				case OP_REPLYVOICE:
 				case OP_REPLYTALKBACK:
-					//if we are using red5 recorder, flv files need to be shown in audio player, so we force poodll type audio
-					if(stripos($filename,'.mp3')){
-						$responsestring .= format_text("<a href=\"$rawmediapath\">$filename</a>", FORMAT_HTML);
-					}else{
-						$responsestring .= format_text('{POODLL:type=audio,path='.	$mediapath .',protocol=http,embed=' . $embed . ',embedstring='. $embedstring .'}', FORMAT_HTML);
-					}
+					//not supported yet
 					break;
 					
 				case OP_REPLYMP3VOICE:
 						//originally tried to force poodll, but best to default to whatever
-						//$responsestring .= format_text('{POODLL:type=audio,path='.	$mediapath .',protocol=http,embed=' . $embed . ',embedstring='. $embedstring .'}', FORMAT_HTML);
 						$responsestring .= format_text("<a href=\"$rawmediapath\">$filename</a>", FORMAT_HTML);
+						//$responsestring .= "<a href=\"$rawmediapath\">$filename</a>";
 						break;						
 					
 				case OP_REPLYVIDEO:
@@ -473,11 +468,11 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 						break;
 
 				case OP_REPLYWHITEBOARD:
-					$responsestring .= "<img alt=\"submittedimage\" width=\"" . $CFG->filter_poodll_videowidth . "\" src=\"" . urldecode($mediapath) . "\" />";
+					$responsestring .= "<img alt=\"submittedimage\" class=\"assignsubmission_onlinepoodll_whiteboardwidth\" src=\"" . urldecode($mediapath) . "\" />";
 					break;
 					
 				case OP_REPLYSNAPSHOT:
-					$responsestring .= "<img alt=\"submittedimage\" width=\"" . $CFG->filter_poodll_videowidth . "\" src=\"" . urldecode($mediapath) . "\" />";
+					$responsestring .= "<img alt=\"submittedimage\" class=\"assignsubmission_onlinepoodll_snapshotwidth\" src=\"" . urldecode($mediapath) . "\" />";
 					break;
 					
 				default:
