@@ -268,13 +268,14 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 			//show the previous submission in a player or whatever
 			$mform->addElement('static', 'currentsubmission', 
 				get_string('currentsubmission', 'assignsubmission_onlinepoodll') ,
-				$this->fetchResponses($submission->id,false,false));
+				$this->fetchResponses($submission->id,false));
 			
         }
         
          if (!isset($data->vectordata)) {
             $data->vectordata = '';
         }
+
         if ($submission) {
             $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
             if ($onlinepoodllsubmission) {
@@ -283,10 +284,18 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
         }
 
-		//We prepare our form here and fetch/save data in SAVE method
-		$usercontextid=context_user::instance($USER->id)->id;
-		$draftitemid = file_get_submitted_draft_itemid(OP_FILENAMECONTROL);
-		$contextid=$this->assignment->get_context()->id;
+		//we need to get a draft item id, but if the form was cancelled or invalid
+        //the old draftitemid will get set to the form, and the newly fetched one passed to oru recorders
+        //this makes the form submit fail, because the uploaded files can't be found
+        //hence we check for a previous submission first. Justin 2017/02/05
+        $draftitemid = optional_param('draftitemid',0,PARAM_INT);
+        if($draftitemid==0) {
+            $draftitemid = file_get_submitted_draft_itemid(OP_FILENAMECONTROL);
+        }
+
+        //We prepare our form here and fetch/save data in SAVE method
+        $usercontextid=context_user::instance($USER->id)->id;
+        $contextid=$this->assignment->get_context()->id;
 		file_prepare_draft_area($draftitemid, $contextid, ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA, $submissionid, null,null);
 		$mform->addElement('hidden', 'draftitemid', $draftitemid);
 		$mform->addElement('hidden', 'usercontextid', $usercontextid);	
@@ -295,7 +304,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->setType('draftitemid', PARAM_INT);
 		$mform->setType('usercontextid', PARAM_INT); 
 		$mform->setType(OP_FILENAMECONTROL, PARAM_TEXT); 
-		$mform->setType(OP_VECTORCONTROL, PARAM_TEXT); 
+		$mform->setType(OP_VECTORCONTROL, PARAM_TEXT);
+
+
 	
 		//get timelimit for recorders if set
 		$timelimit = $this->get_config('timelimit');
@@ -382,7 +393,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 	*
 	*
 	*/
-	function fetchResponses($submissionid, $checkfordata=false,  $islist=false){
+	function fetchResponses($submissionid, $checkfordata=false){
 		global $CFG;
 		
 
@@ -416,7 +427,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 
         //size params for our response players/images
-        $size = $this->fetch_response_size($this->get_config('recordertype'),$islist);
+        $size = $this->fetch_response_size($this->get_config('recordertype'));
 
 		
 		//if this is a playback area, for teacher, show a string if no file
@@ -483,7 +494,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		
 	}//end of fetchResponses
 	
-    public function	fetch_response_size($recordertype,$islist){
+    public function	fetch_response_size($recordertype){
+
+	        //is this a list view
+            $islist = optional_param('action','',PARAM_TEXT)=='grading';
+
+            //build our sizes array
             $sizes=array();
             $sizes['0']=new stdClass();$sizes['0']->width=0;$sizes['0']->height=0;
             $sizes['160']=new stdClass();$sizes['160']->width=160;$sizes['160']->height=120;
@@ -621,7 +637,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
 
 		//our response, this will output a player/image, and optionally a portfolio export link
-		return $this->fetchResponses($submission->id,false,false) . $this->get_p_links($submission->id) ;
+		return $this->fetchResponses($submission->id,false) . $this->get_p_links($submission->id) ;
 		//rely on get_files from now on to generate portfolio links Justin 19/06/2014
 
     }
@@ -668,7 +684,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         if ($onlinepoodllsubmission) {
 
             // show our responses in a player
-			$result = $this->fetchResponses($submission->id,false,true);
+			$result = $this->fetchResponses($submission->id,false);
 		
 			//the default render method. Only shows a link
 			// return $this->assignment->render_area_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGN_FILEAREA_SUBMISSION_ONLINEPOODLL, $submission->id);

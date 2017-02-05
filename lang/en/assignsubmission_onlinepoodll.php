@@ -49,18 +49,18 @@ $string['allowedrecorders'] = 'Recorders to enable';
 $string['allowedrecordersdetails'] = '';
 $string['showcurrentsubmission'] = 'Show Current Submission';
 $string['showcurrentsubmissiondetails'] = 'Show previously recorded submission on submission form.';
-$string['displaysizesingle'] = 'Video player size(grading etc)';
+$string['displaysizesingle'] = 'Video player size(normal)';
 $string['displaysizesingledetails'] = '';
-$string['displaysizelist'] = 'Video player size on summary pages';
+$string['displaysizelist'] = 'Video player size(in lists)';
 $string['displaysizelistdetails'] = '';
 $string['shownovideo'] = 'Do not display image';
-$string['videoplaceholder'] = ' [video not displayed] ';
+$string['videoplaceholder'] = ' [video submitted] ';
 $string['shownoimage'] = 'Do not display image';
-$string['imageplaceholder'] = ' [image not displayed] ';
+$string['imageplaceholder'] = ' [image submitted] ';
 
-$string['imagedisplaysizesingle'] = 'Image display size(grading etc)';
+$string['imagedisplaysizesingle'] = 'Image display size(normal)';
 $string['imagedisplaysizesingledetails'] = '';
-$string['imagedisplaysizelist'] = 'Image display size on summary pages';
+$string['imagedisplaysizelist'] = 'Image display size(in lists)';
 $string['imagedisplaysizelistdetails'] = '';
 
 $string['setting_video_heading'] = 'Video recorder/player settings';

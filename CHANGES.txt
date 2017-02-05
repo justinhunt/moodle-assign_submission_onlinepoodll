@@ -2,7 +2,8 @@ Change List
 =========
 
 Version 2017020501
-Added better support for widhts of submitted whiteboards, images and videos
+Added better support for widths of submitted whiteboards, images and videos
+Fixed a bug when resubmitting assignments that had not passed form validation
 
 Version 2016112701
 Fixed an issue where widths were pulled from a  missing poodll property
