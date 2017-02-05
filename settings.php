@@ -103,7 +103,7 @@ if(!defined('OP_REPLYVOICE')){
         new lang_string('imagedisplaysizesingle', 'assignsubmission_onlinepoodll'),
         new lang_string('imagedisplaysizesingledetails', 'assignsubmission_onlinepoodll'), '320', $width_options));
 
-    $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/snapshot_displaysize_list',
+    $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/whiteboard_displaysize_list',
         new lang_string('imagedisplaysizelist', 'assignsubmission_onlinepoodll'),
         new lang_string('imagedisplaysizelistdetails', 'assignsubmission_onlinepoodll'), '480', $width_options));
 					

@@ -621,7 +621,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
 
 		//our response, this will output a player/image, and optionally a portfolio export link
-		return $this->fetchResponses($submission->id,false,true) . $this->get_p_links($submission->id) ;
+		return $this->fetchResponses($submission->id,false,false) . $this->get_p_links($submission->id) ;
 		//rely on get_files from now on to generate portfolio links Justin 19/06/2014
 
     }
@@ -668,7 +668,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         if ($onlinepoodllsubmission) {
 
             // show our responses in a player
-			$result = $this->fetchResponses($submission->id,false,false);
+			$result = $this->fetchResponses($submission->id,false,true);
 		
 			//the default render method. Only shows a link
 			// return $this->assignment->render_area_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGN_FILEAREA_SUBMISSION_ONLINEPOODLL, $submission->id);
