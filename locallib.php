@@ -458,7 +458,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                         break;
                     }
 					$responsestring .= "<img alt='submittedimage' class='assignsubmission_onlinepoodll_whiteboard'" .
-                        "src='" . urldecode($mediapath) . "' style='max-width: $size->width px;' />";
+                        "src='" . urldecode($mediapath) . "' style='max-width: $size->width" . "px;' />";
 					break;
 					
 				case OP_REPLYSNAPSHOT:
@@ -467,7 +467,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                         break;
                     }
 					$responsestring .= "<img alt='submittedimage' class='assignsubmission_onlinepoodll_snapshot'" .
-                            "src='" . urldecode($mediapath) . "' style='max-width: $size->width px;' />";
+                            "src='" . urldecode($mediapath) . "' style='max-width: $size->width" . "px;' />";
 					break;
 					
 				default:
