@@ -490,7 +490,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $sizes['320']=new stdClass();$sizes['320']->width=320;$sizes['320']->height=240;
             $sizes['480']=new stdClass();$sizes['480']->width=480;$sizes['480']->height=360;
             $sizes['640']=new stdClass();$sizes['640']->width=640;$sizes['640']->height=480;
-            $sizes['800']=new stdClass();$sizes['800']->width=800;$sizes['600']->height=600;
+            $sizes['800']=new stdClass();$sizes['800']->width=800;$sizes['800']->height=600;
             $sizes['1024']=new stdClass();$sizes['1024']->width=1024;$sizes['1024']->height=768;
 
             $size=$sizes[0];
