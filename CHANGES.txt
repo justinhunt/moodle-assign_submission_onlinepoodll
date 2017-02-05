@@ -1,5 +1,9 @@
 Change List
 =========
+
+Version 2017020501
+Added better support for widhts of submitted whiteboards, images and videos
+
 Version 2016112701
 Fixed an issue where widths were pulled from a  missing poodll property
 

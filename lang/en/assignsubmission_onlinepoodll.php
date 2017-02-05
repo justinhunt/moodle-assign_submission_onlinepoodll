@@ -49,10 +49,23 @@ $string['allowedrecorders'] = 'Recorders to enable';
 $string['allowedrecordersdetails'] = '';
 $string['showcurrentsubmission'] = 'Show Current Submission';
 $string['showcurrentsubmissiondetails'] = 'Show previously recorded submission on submission form.';
-$string['displaysizesingle'] = 'Default video player size(grading etc)';
+$string['displaysizesingle'] = 'Video player size(grading etc)';
 $string['displaysizesingledetails'] = '';
 $string['displaysizelist'] = 'Video player size on summary pages';
 $string['displaysizelistdetails'] = '';
-$string['placeholderonly'] = 'No video player';
-$string['videoplaceholder'] = ' [video not displayed here] ';
+$string['shownovideo'] = 'Do not display image';
+$string['videoplaceholder'] = ' [video not displayed] ';
+$string['shownoimage'] = 'Do not display image';
+$string['imageplaceholder'] = ' [image not displayed] ';
 
+$string['imagedisplaysizesingle'] = 'Image display size(grading etc)';
+$string['imagedisplaysizesingledetails'] = '';
+$string['imagedisplaysizelist'] = 'Image display size on summary pages';
+$string['imagedisplaysizelistdetails'] = '';
+
+$string['setting_video_heading'] = 'Video recorder/player settings';
+$string['setting_video_heading_details'] = '';
+$string['setting_snapshot_heading'] = 'Snapshot recorder/image settings';
+$string['setting_snapshot_heading_details'] = '';
+$string['setting_whiteboard_heading'] = 'Whiteboard recorder/image settings';
+$string['setting_whiteboard_heading_details'] = '';
