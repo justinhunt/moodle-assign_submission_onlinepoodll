@@ -72,7 +72,7 @@ if(!defined('OP_REPLYVOICE')){
 
 	$settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displaysize_list', 
 						new lang_string('displaysizelist', 'assignsubmission_onlinepoodll'), 
-						new lang_string('displaysizelistdetails', 'assignsubmission_onlinepoodll'), '480', $size_options));
+						new lang_string('displaysizelistdetails', 'assignsubmission_onlinepoodll'), '0', $size_options));
 
     //The width of an image
     $width_options = array('0' => new lang_string('shownoimage', 'assignsubmission_onlinepoodll'),
@@ -91,7 +91,7 @@ if(!defined('OP_REPLYVOICE')){
 
     $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/snapshot_displaysize_list',
         new lang_string('imagedisplaysizelist', 'assignsubmission_onlinepoodll'),
-        new lang_string('imagedisplaysizelistdetails', 'assignsubmission_onlinepoodll'), '480', $width_options));
+        new lang_string('imagedisplaysizelistdetails', 'assignsubmission_onlinepoodll'), '160', $width_options));
 
     //Settings for whiteboard images
     $settings->add(new admin_setting_heading('assignsubmission_onlinepoodll/whiteboard_heading',
@@ -105,7 +105,7 @@ if(!defined('OP_REPLYVOICE')){
 
     $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/whiteboard_displaysize_list',
         new lang_string('imagedisplaysizelist', 'assignsubmission_onlinepoodll'),
-        new lang_string('imagedisplaysizelistdetails', 'assignsubmission_onlinepoodll'), '480', $width_options));
+        new lang_string('imagedisplaysizelistdetails', 'assignsubmission_onlinepoodll'), '160', $width_options));
 					
 
 
