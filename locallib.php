@@ -445,7 +445,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 						break;						
 					
 				case OP_REPLYVIDEO:
-						if($size->width=0){
+						if($size->width==0){
 							$responsestring=get_string('videoplaceholder','assignsubmission_onlinepoodll');
 							break;
 						}
@@ -453,7 +453,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 						break;
 
 				case OP_REPLYWHITEBOARD:
-                    if($size->width=0){
+                    if($size->width==0){
                         $responsestring=get_string('imageplaceholder','assignsubmission_onlinepoodll');
                         break;
                     }
@@ -462,7 +462,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 					break;
 					
 				case OP_REPLYSNAPSHOT:
-                    if($size->width=0){
+                    if($size->width==0){
                         $responsestring=get_string('imageplaceholder','assignsubmission_onlinepoodll');
                         break;
                     }
