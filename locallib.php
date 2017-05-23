@@ -366,9 +366,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 					
 		}
 
-        // hidden params
-        $mform->addElement('hidden', 'id', 0);
-        $mform->setType('id', PARAM_INT);
+        // hidden params: Pretty sure we don't need this. Justin 20170523
+        //$mform->addElement('hidden', 'id', 0);
+        //$mform->setType('id', PARAM_INT);
 		return true;
 
     }
