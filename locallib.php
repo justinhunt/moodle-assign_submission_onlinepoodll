@@ -149,6 +149,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}else{
 			$mform->addElement('hidden', 'backimage',$backimage);
 		}
+		$mform->setType('backimage', PARAM_INT);
 
 		
 		//board sizes
@@ -171,6 +172,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}else{
 			$mform->addElement('hidden', 'assignsubmission_onlinepoodll_boardsize',$boardsize);
 		}
+		$mform->setType('assignsubmission_onlinepoodll_boardsize', PARAM_TEXT);
 
     }
     
