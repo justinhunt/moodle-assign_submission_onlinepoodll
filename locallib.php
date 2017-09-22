@@ -439,6 +439,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 
         //size params for our response players/images
+        //audio is a simple 1 or 0 for display or not
         $size = $this->fetch_response_size($this->get_config('recordertype'));
 
 		
@@ -460,8 +461,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
                 case OP_REPLYVOICE:
 				case OP_REPLYMP3VOICE:
-						$responsestring .= format_text("<a href='$rawmediapath'>$filename</a>", FORMAT_HTML);
-						break;						
+				    if($size) {
+                        $responsestring .= format_text("<a href='$rawmediapath'>$filename</a>", FORMAT_HTML);
+                    }else{
+                        $responsestring=get_string('audioplaceholder','assignsubmission_onlinepoodll');
+                    }
+                    break;
 					
 				case OP_REPLYVIDEO:
 						if($size->width==0){
@@ -532,8 +537,10 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                 $size=$islist ? $sizes[$config->snapshot_displaysize_list] : $sizes[$config->snapshot_displaysize_single] ;
                 break;
             case OP_REPLYVOICE:
-            case OP_REPLYTALKBACK:
             case OP_REPLYMP3VOICE:
+                $size=$islist ? $config->displayaudioplayer_list : $config->displayaudioplayer_single ;
+                break;
+            case OP_REPLYTALKBACK:
             default:
                 break;
 
