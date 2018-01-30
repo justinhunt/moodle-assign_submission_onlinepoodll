@@ -60,7 +60,22 @@ if(!defined('OP_REPLYMP3VOICE')){
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assign_submission_onlinepoodll extends assign_submission_plugin {
+		
+  public function is_enabled() {
+      return $this->get_config('enabled') && $this->is_configurable();
+  }
 
+  public function is_configurable() {
+      $context = context_course::instance($this->assignment->get_course()->id);
+      if ($this->get_config('enabled')) {
+          return true;
+      }
+      if (!has_capability('assignsubmission/onlinepoodll:use', $context)) {
+          return false;
+      }
+      return parent::is_configurable();
+  }
+		
     /**
      * Get the name of the online text submission plugin
      * @return string
