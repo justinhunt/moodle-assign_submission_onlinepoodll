@@ -76,3 +76,5 @@ $string['setting_whiteboard_heading'] = 'Whiteboard image settings';
 $string['setting_whiteboard_heading_details'] = 'Settings controlling image appearance in submission review and list pages';
 $string['deletesubmission'] = 'Delete this submission.';
 $string['reallydeletesubmission'] = 'Really delete this submission?';
+
+$string['onlinepoodll:use'] = 'Allow use of Online Poodll submissions';
