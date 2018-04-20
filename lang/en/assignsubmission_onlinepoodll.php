@@ -78,3 +78,4 @@ $string['deletesubmission'] = 'Delete this submission.';
 $string['reallydeletesubmission'] = 'Really delete this submission?';
 
 $string['onlinepoodll:use'] = 'Allow use of Online Poodll submissions';
+$string['privacy:metadata'] = 'The Poodll Online Assignment Submission plugin does store personal data.';
