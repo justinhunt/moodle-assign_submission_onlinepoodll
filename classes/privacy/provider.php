@@ -120,7 +120,7 @@ class provider implements metadataprovider {
         $DB->delete_records(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, ['assignment' => $requestdata->get_assign()->get_instance()->id]);
     }
     /**
-     * A call to this method should delete user data (where practicle) using the userid and submission.
+     * A call to this method should delete user data (where practical) using the userid and submission.
      *
      * @param  submission_request_data $exportdata Details about the user and context to focus the deletion.
      */
