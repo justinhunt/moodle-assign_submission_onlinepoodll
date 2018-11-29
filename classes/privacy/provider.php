@@ -82,6 +82,17 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
     public static function _get_student_user_ids($useridlist) {
         // No need.
     }
+
+    /**
+     * If you have tables that contain userids and you can generate entries in your tables without creating an
+     * entry in the assign_submission table then please fill in this method.
+     *
+     * @param  userlist $userlist The userlist object
+     */
+    public static function _get_userids_from_context($userlist) {
+        // Not required.
+    }
+
     /**
      * Export all user data for this plugin.
      *
