@@ -46,8 +46,12 @@ use assignsubmission_onlinepoodll\constants;
 
 
 class provider implements metadataprovider,
-    \mod_assign\privacy\assignsubmission_provider,
-    \mod_assign\privacy\assignsubmission_user_provider {
+    \mod_assign\privacy\assignsubmission_provider //, \mod_assign\privacy\assignsubmission_user_provider
+{
+
+    //TO DO: because 3.3 does not have a \mod_assign\privacy\assignsubmission_user_provider
+    //we would need to maintain different branches per Moodle version. One codebase can not do 3.3 - 3.6. here.
+    // So its commented above
 
     use \core_privacy\local\legacy_polyfill;
     use \mod_assign\privacy\submission_legacy_polyfill;
