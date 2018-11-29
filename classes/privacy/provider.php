@@ -163,4 +163,27 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
         $DB->delete_records(constants::M_TABLE, ['assignment' => $deletedata->get_assign()->get_instance()->id,
             'submission' => $submissionid]);
     }
+
+    /**
+     * Deletes all submissions for the submission ids / userids provided in a context.
+     * assign_plugin_request_data contains:
+     * - context
+     * - assign object
+     * - submission ids (pluginids)
+     * - user ids
+     * @param  assign_plugin_request_data $deletedata A class that contains the relevant information required for deletion.
+     */
+    public static function _delete_submissions($deletedata) {
+        global $DB;
+
+        \core_plagiarism\privacy\provider::delete_plagiarism_for_users($deletedata->get_userids(), $deletedata->get_context());
+        if (empty($deletedata->get_submissionids())) {
+            return;
+        }
+
+        list($sql, $params) = $DB->get_in_or_equal($deletedata->get_submissionids(), SQL_PARAMS_NAMED);
+
+        $params['assignid'] = $deletedata->get_assignid();
+        $DB->delete_records_select(constants::M_COMPONENT, "assignment = :assignid AND submission $sql", $params);
+    }
 }
