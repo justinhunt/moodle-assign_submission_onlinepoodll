@@ -34,6 +34,7 @@ use \core_privacy\local\metadata\provider as metadataprovider;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\contextlist;
 use \mod_assign\privacy\assign_plugin_request_data;
+//use \mod_assign\privacy\useridlist;
 use assignsubmission_onlinepoodll\constants;
 
 /**
@@ -43,11 +44,10 @@ use assignsubmission_onlinepoodll\constants;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-///class provider implements metadataprovider, \mod_assign\privacy\assignsubmission_provider {
-///  use \core_privacy\local\legacy_polyfill;
-///use \mod_assign\privacy\assignsubmission_provider\legacy_polyfill;
 
-class provider implements metadataprovider, \mod_assign\privacy\assignsubmission_provider {
+class provider implements metadataprovider,
+    \mod_assign\privacy\assignsubmission_provider,
+    \mod_assign\privacy\assignsubmission_user_provider {
 
     use \core_privacy\local\legacy_polyfill;
     use \mod_assign\privacy\submission_legacy_polyfill;
@@ -74,6 +74,7 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
     public static function _get_context_for_userid_within_submission($userid, $contextlist) {
         // This is already fetched from mod_assign.
     }
+
     /**
      * This is also covered by the mod_assign provider and it's queries.
      *
