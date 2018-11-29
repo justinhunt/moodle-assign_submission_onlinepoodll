@@ -60,7 +60,7 @@ class provider implements metadataprovider,
      * @param  collection $collection A list of information to add to.
      * @return collection Return the collection after adding to it.
      */
-    public static function _get_metadata(collection $collection) {
+    public static function _get_metadata($collection) {
         $collection->link_subsystem('core_files', 'privacy:metadata:filepurpose');
         return $collection;
     }
