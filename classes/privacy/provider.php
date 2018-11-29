@@ -181,9 +181,12 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
             return;
         }
 
+        $fs = get_file_storage();
         list($sql, $params) = $DB->get_in_or_equal($deletedata->get_submissionids(), SQL_PARAMS_NAMED);
+        $fs->delete_area_files_select($deletedata->get_context()->id,
+            constants::M_COMPONENT, constants::M_FILEAREA, $sql, $params);
 
         $params['assignid'] = $deletedata->get_assignid();
-        $DB->delete_records_select(constants::M_COMPONENT, "assignment = :assignid AND submission $sql", $params);
+        $DB->delete_records_select(constants::M_TABLE, "assignment = :assignid AND submission $sql", $params);
     }
 }
