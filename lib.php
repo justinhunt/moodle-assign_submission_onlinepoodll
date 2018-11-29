@@ -23,6 +23,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+use assignsubmission_onlinepoodll\constants;
+
 /**
  * Serves assignment submissions and other files.
  *
@@ -45,7 +47,7 @@ function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context
     $itemid = (int)array_shift($args);
 	
 	//back image is a special case
-	if(!($itemid==0 && $filearea="onlinepoodll_backimage")){
+	if(!($itemid==0 && $filearea=constants::M_WB_FILEAREA)){
 
 		$record = $DB->get_record('assign_submission', array('id'=>$itemid), 'userid, assignment', MUST_EXIST);
 		$userid = $record->userid;
@@ -72,6 +74,6 @@ function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context
     if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
         return false;
     }
-    $forcedownload = ($filearea !='onlinepoodll_backimage');
+    $forcedownload = ($filearea !=constants::M_WB_FILEAREA);
     send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
 }

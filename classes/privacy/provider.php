@@ -34,6 +34,7 @@ use \core_privacy\local\metadata\provider as metadataprovider;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\contextlist;
 use \mod_assign\privacy\assign_plugin_request_data;
+use assignsubmission_onlinepoodll\constants;
 
 /**
  * Privacy Subsystem for assignsubmission_onlinepoodll implementing null_provider.
@@ -47,7 +48,9 @@ use \mod_assign\privacy\assign_plugin_request_data;
 ///use \mod_assign\privacy\assignsubmission_provider\legacy_polyfill;
 
 class provider implements metadataprovider, \mod_assign\privacy\assignsubmission_provider {
+
     use \core_privacy\local\legacy_polyfill;
+    use \mod_assign\privacy\submission_legacy_polyfill;
 
 
 
@@ -68,7 +71,7 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
      * @param  int $userid The user ID that we are finding contexts for.
      * @param  contextlist $contextlist A context list to add sql and params to for contexts.
      */
-    public static function get_context_for_userid_within_submission(int $userid, contextlist $contextlist) {
+    public static function get_context_for_userid_within_submission($userid, contextlist $contextlist) {
         // This is already fetched from mod_assign.
     }
     /**
@@ -122,10 +125,10 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
         \core_plagiarism\privacy\provider::delete_plagiarism_for_context($requestdata->get_context());
 
         $fs = get_file_storage();
-        $fs->delete_area_files($requestdata->get_context()->id, ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA);
+        $fs->delete_area_files($requestdata->get_context()->id, constants::M_COMPONENT, constants::M_FILEAREA);
 
         // Delete records from assignsubmission_file table.
-        $DB->delete_records(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, ['assignment' => $requestdata->get_assign()->get_instance()->id]);
+        $DB->delete_records(constants::M_TABLE, ['assignment' => $requestdata->get_assign()->get_instance()->id]);
     }
 
 
@@ -143,10 +146,10 @@ class provider implements metadataprovider, \mod_assign\privacy\assignsubmission
         $submissionid = $deletedata->get_pluginobject()->id;
 
         $fs = get_file_storage();
-        $fs->delete_area_files($deletedata->get_context()->id, ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA,
+        $fs->delete_area_files($deletedata->get_context()->id, constants::M_COMPONENT, constants::M_FILEAREA,
             $submissionid);
 
-        $DB->delete_records(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, ['assignment' => $deletedata->get_assign()->get_instance()->id,
+        $DB->delete_records(constants::M_TABLE, ['assignment' => $deletedata->get_assign()->get_instance()->id,
             'submission' => $submissionid]);
     }
 

@@ -21,52 +21,45 @@
  * @copyright 2012 Justin Hunt {@link http://www.poodll.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-//some constants for poodll feedback
-if(!defined('OP_REPLYVOICE')){
-	define('OP_REPLYMP3VOICE',0);
-	define('OP_REPLYVOICE',1);
-	define('OP_REPLYVIDEO',2);
-	define('OP_REPLYWHITEBOARD',3);
-	define('OP_REPLYSNAPSHOT',4);
-	define('OP_REPLYTALKBACK',5);
-}
+
+use assignsubmission_onlinepoodll\constants;
 
 	//enable by default
-	$settings->add(new admin_setting_configcheckbox('assignsubmission_onlinepoodll/default',
-                   new lang_string('default', 'assignsubmission_onlinepoodll'),
-                   new lang_string('default_help', 'assignsubmission_onlinepoodll'), 0));
+	$settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/default',
+                   new lang_string('default', constants::M_COMPONENT),
+                   new lang_string('default_help', constants::M_COMPONENT), 0));
                    
 
 	//Recorders
-   $rec_options = array( OP_REPLYMP3VOICE => get_string("replymp3voice", "assignsubmission_onlinepoodll"), 
-				OP_REPLYVOICE => get_string("replyvoice", "assignsubmission_onlinepoodll"), 
-				OP_REPLYVIDEO => get_string("replyvideo", "assignsubmission_onlinepoodll"),
-				OP_REPLYWHITEBOARD => get_string("replywhiteboard", "assignsubmission_onlinepoodll"),
-				OP_REPLYSNAPSHOT => get_string("replysnapshot", "assignsubmission_onlinepoodll"));
-	$rec_defaults = array(OP_REPLYMP3VOICE  => 1, OP_REPLYVIDEO => 1 , OP_REPLYVOICE => 1,OP_REPLYWHITEBOARD => 1,OP_REPLYSNAPSHOT => 1);
-	$settings->add(new admin_setting_configmulticheckbox('assignsubmission_onlinepoodll/allowedrecorders',
-						   get_string('allowedrecorders', 'assignsubmission_onlinepoodll'),
-						   get_string('allowedrecordersdetails', 'assignsubmission_onlinepoodll'), $rec_defaults,$rec_options));
+   $rec_options = array( constants::M_REPLYMP3VOICE => get_string("replymp3voice", constants::M_COMPONENT),
+				constants::M_REPLYVOICE => get_string("replyvoice", constants::M_COMPONENT),
+				constants::M_REPLYVIDEO => get_string("replyvideo", constants::M_COMPONENT),
+				constants::M_REPLYWHITEBOARD => get_string("replywhiteboard", constants::M_COMPONENT),
+				constants::M_REPLYSNAPSHOT => get_string("replysnapshot", constants::M_COMPONENT));
+	$rec_defaults = array(constants::M_REPLYMP3VOICE  => 1, constants::M_REPLYVIDEO => 1 , constants::M_REPLYVOICE => 1,constants::M_REPLYWHITEBOARD => 1,constants::M_REPLYSNAPSHOT => 1);
+	$settings->add(new admin_setting_configmulticheckbox(constants::M_COMPONENT . '/allowedrecorders',
+						   get_string('allowedrecorders', constants::M_COMPONENT),
+						   get_string('allowedrecordersdetails', constants::M_COMPONENT), $rec_defaults,$rec_options));
 						   
 	//show current submission on submission form
-	$yesno_options = array( 0 => get_string("no", "assignsubmission_onlinepoodll"), 
-				1 => get_string("yes", "assignsubmission_onlinepoodll"));
-	$settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/showcurrentsubmission', 
-					new lang_string('showcurrentsubmission', 'assignsubmission_onlinepoodll'), 
-					new lang_string('showcurrentsubmissiondetails', 'assignsubmission_onlinepoodll'), 1, $yesno_options));
+	$yesno_options = array( 0 => get_string("no", constants::M_COMPONENT),
+				1 => get_string("yes", constants::M_COMPONENT));
+	$settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/showcurrentsubmission',
+					new lang_string('showcurrentsubmission', constants::M_COMPONENT),
+					new lang_string('showcurrentsubmissiondetails', constants::M_COMPONENT), 1, $yesno_options));
 
 
     //Settings for audio recordings
-    $settings->add(new admin_setting_heading('assignsubmission_onlinepoodll/audio_heading',
-    get_string('setting_audio_heading', 'assignsubmission_onlinepoodll'),
-    get_string('setting_audio_heading_details', 'assignsubmission_onlinepoodll')));
+    $settings->add(new admin_setting_heading(constants::M_COMPONENT . '/audio_heading',
+    get_string('setting_audio_heading', constants::M_COMPONENT),
+    get_string('setting_audio_heading_details', constants::M_COMPONENT)));
 
-    $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displayaudioplayer_single',
-    new lang_string('displayaudioplayersingle', 'assignsubmission_onlinepoodll'),
+    $settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/displayaudioplayer_single',
+    new lang_string('displayaudioplayersingle', constants::M_COMPONENT),
     '', '1', $yesno_options));
 
-    $settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displayaudioplayer_list',
-    new lang_string('displayaudioplayerlist', 'assignsubmission_onlinepoodll'),
+    $settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/displayaudioplayer_list',
+    new lang_string('displayaudioplayerlist', constants::M_COMPONENT),
     '', '1', $yesno_options));
 
 

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use assignsubmission_onlinepoodll\constants;
+
 /**
  * Stub for upgrade code
  * @param int $oldversion
@@ -42,7 +44,7 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
     if ($oldversion < 2012112000) {
     	$table = new xmldb_table('assignsubmission_onlinepood');	
 		if ($dbman->table_exists($table)){
-			$dbman->rename_table( $table, 'assignsubmission_onlinepoodl', $continue=true, $feedback=true);   
+			$dbman->rename_table( $table, constants::M_TABLE, $continue=true, $feedback=true);
         }
 		 // online PoodLL savepoint reached
         upgrade_plugin_savepoint(true, 2012112000, 'assignsubmission', 'onlinepoodll');
@@ -51,7 +53,7 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
 	
 	//add filename field.
     if ($oldversion < 2013120500) {
-    	$table = new xmldb_table('assignsubmission_onlinepoodl');	
+    	$table = new xmldb_table(constants::M_TABLE);
     	 $field = new xmldb_field('filename', XMLDB_TYPE_TEXT, null, null, null, null, null, 'recorder');
 
 		// Conditionally launch add field filename.
@@ -69,7 +71,7 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
    
 
         
-        $table = new xmldb_table('assignsubmission_onlinepoodl');
+        $table = new xmldb_table(constants::M_TABLE);
         
         //bug in previous version means that filename field was not added properly.
         //if that is the case, add it now.
@@ -93,7 +95,7 @@ function xmldb_assignsubmission_onlinepoodll_upgrade($oldversion) {
 
     //set all audio red5 to new audio  recorder type
     if ($oldversion < 2017052201) {
-        $DB->set_field('assignsubmission_onlinepoodl','recorder',0,array('recorder'=>1));
+        $DB->set_field(constants::M_TABLE,'recorder',0,array('recorder'=>1));
         // online PoodLL savepoint reached
         upgrade_plugin_savepoint(true, 2017052201, 'assignsubmission', 'onlinepoodll');
     }

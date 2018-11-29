@@ -22,12 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-if ( ! defined( 'ASSIGNSUBMISSION_ONLINEPOODLL_TABLE' ) ){ 
-	define('ASSIGNSUBMISSION_ONLINEPOODLL_TABLE', 'assignsubmission_onlinepoodl');
-	define('ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT', 'assignsubmission_onlinepoodll');
-	define('ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA', 'submissions_onlinepoodll');
-}
-
+use assignsubmission_onlinepoodll\constants;
 /**
  * restore subplugin class that provides the necessary information needed to restore one assign_submission subplugin.
  *
@@ -67,9 +62,9 @@ class restore_assignsubmission_onlinepoodll_subplugin extends restore_subplugin 
         // the mapping is set in the restore for the core assign activity. When a submission node is processed
         $data->submission = $this->get_mappingid('submission', $data->submission);
 
-        $DB->insert_record(ASSIGNSUBMISSION_ONLINEPOODLL_TABLE, $data);
+        $DB->insert_record(constants::M_TABLE, $data);
 
-        $this->add_related_files(ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_FILEAREA, 'submission', null, $oldsubmissionid);
+        $this->add_related_files(constants::M_COMPONENT, constants::M_FILEAREA, 'submission', null, $oldsubmissionid);
     }
 
 }
