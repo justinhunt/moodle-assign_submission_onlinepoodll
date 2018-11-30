@@ -34,11 +34,18 @@ use \core_privacy\local\metadata\provider as metadataprovider;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\contextlist;
 use \mod_assign\privacy\assign_plugin_request_data;
-//use \mod_assign\privacy\useridlist;
+use \mod_assign\privacy\useridlist;
 use assignsubmission_onlinepoodll\constants;
 
+//3.3 user_provider not backported so we use this switch to avoid errors when using same codebase for 3.3 and higher
+if (interface_exists('\mod_assign\privacy\assignsubmission_user_provider')) {
+    interface the_user_provider extends \mod_assign\privacy\assignsubmission_user_provider{}
+} else {
+    interface the_user_provider {};
+}
+
 /**
- * Privacy Subsystem for assignsubmission_onlinepoodll implementing null_provider.
+ * Privacy Subsystem for assignsubmission_onlinepoodll
  *
  * @copyright  2018 Justin Hunt https://poodll.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -46,17 +53,12 @@ use assignsubmission_onlinepoodll\constants;
 
 
 class provider implements metadataprovider,
-    \mod_assign\privacy\assignsubmission_provider //, \mod_assign\privacy\assignsubmission_user_provider
+    \mod_assign\privacy\assignsubmission_provider,
+    the_user_provider
 {
-
-    //TO DO: because 3.3 does not have a \mod_assign\privacy\assignsubmission_user_provider
-    //we would need to maintain different branches per Moodle version. One codebase can not do 3.3 - 3.6. here.
-    // So its commented above
 
     use \core_privacy\local\legacy_polyfill;
     use \mod_assign\privacy\submission_legacy_polyfill;
-
-
 
     /**
      * Return meta data about this plugin.
@@ -94,7 +96,7 @@ class provider implements metadataprovider,
      *
      * @param  userlist $userlist The userlist object
      */
-    public static function _get_userids_from_context($userlist) {
+    public static function get_userids_from_context(\core_privacy\local\request\userlist $userlist) {
         // Not required.
     }
 
@@ -178,7 +180,7 @@ class provider implements metadataprovider,
      * - user ids
      * @param  assign_plugin_request_data $deletedata A class that contains the relevant information required for deletion.
      */
-    public static function _delete_submissions($deletedata) {
+    public static function delete_submissions(assign_plugin_request_data  $deletedata) {
         global $DB;
 
         \core_plagiarism\privacy\provider::delete_plagiarism_for_users($deletedata->get_userids(), $deletedata->get_context());
