@@ -862,6 +862,44 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     }
 
     /**
+     * Return the plugin configs for external functions.
+     *
+     * @return array the list of settings
+     */
+    public function get_config_for_external() {
+        return (array) $this->get_config();
+    }
+
+    /**
+     * Copy the student's submission from a previous submission. Used when a student opts to base their resubmission
+     * on the last submission.
+     * @param stdClass $sourcesubmission
+     * @param stdClass $destsubmission
+     */
+    public function copy_submission(stdClass $sourcesubmission, stdClass $destsubmission) {
+        global $DB;
+
+        // Copy the files across
+        $contextid = $this->assignment->get_context()->id;
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($contextid, constants::M_COMPONENT,
+                constants::M_FILEAREA, $sourcesubmission->id, 'id', false);
+        foreach ($files as $file) {
+            $fieldupdates = array('itemid' => $destsubmission->id);
+            $fs->create_file_from_storedfile($fieldupdates, $file);
+        }
+
+        // Copy the assignsubmission plugin record.
+        $thesubmission = $this->get_onlinepoodll_submission($sourcesubmission->id);
+        if ($thesubmission) {
+            unset($thesubmission->id);
+            $thesubmission->submission = $destsubmission->id;
+            $DB->insert_record(constants::M_TABLE, $thesubmission);
+        }
+        return true;
+    }
+
+    /**
      * Remove a submission.
      *
      * @param stdClass $submission The submission
@@ -873,14 +911,16 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         $submissionid = $submission ? $submission->id : 0;
         if ($submissionid) {
             $DB->delete_records(constants::M_TABLE, array('submission' => $submissionid));
+
+            //delete recorded files
+            $fs = get_file_storage();
+            $fs->delete_area_files($this->assignment->get_context()->id,
+                    constants::M_COMPONENT,
+                    constants::M_FILEAREA,
+                    $submission->id);
         }
 
-        //delete recorded files
-        $fs = get_file_storage();
-        $fs->delete_area_files($this->assignment->get_context()->id,
-                constants::M_COMPONENT,
-                constants::M_FILEAREA,
-                $submission->id);
+
 
         return true;
     }
