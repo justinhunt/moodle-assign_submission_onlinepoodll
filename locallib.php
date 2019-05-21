@@ -649,7 +649,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 
 
 		//our response, this will output a player/image, and optionally a portfolio export link
-		return $this->fetchResponses($submission->id,false) . $this->get_p_links($submission->id) ;
+		return $this->fetchResponses($submission->id,false);// . $this->get_p_links($submission->id) ;
 		//rely on get_files from now on to generate portfolio links Justin 19/06/2014
 
     }
@@ -862,6 +862,31 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     }
 
     /**
+     * Remove a submission.
+     *
+     * @param stdClass $submission The submission
+     * @return boolean
+     */
+    public function remove(stdClass $submission) {
+        global $DB;
+        //delete database record
+        $submissionid = $submission ? $submission->id : 0;
+        if ($submissionid) {
+            $DB->delete_records(constants::M_TABLE, array('submission' => $submissionid));
+        }
+
+        //delete recorded files
+        $fs = get_file_storage();
+        $fs->delete_area_files($this->assignment->get_context()->id,
+                constants::M_COMPONENT,
+                constants::M_FILEAREA,
+                $submission->id);
+
+        return true;
+    }
+
+
+    /**
      * Formatting for log info
      *
      * @param stdClass $submission The new submission
@@ -886,7 +911,6 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         global $DB;
         // will throw exception on failure
         $DB->delete_records(constants::M_TABLE, array('assignment'=>$this->assignment->get_instance()->id));
-
         return true;
     }
 
