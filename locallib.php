@@ -244,38 +244,36 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
      */
     public function get_form_elements($submission, MoodleQuickForm $mform, stdClass $data) {
 		 global $CFG, $USER, $PAGE;
-		 
-        $elements = array();
+
+        //prepare the AMD javascript for deletesubmission  and toggle
+        $opts = array(
+                "component"=> constants::M_COMPONENT,
+                "filecontrolid"=> constants::M_FILENAMECONTROL
+        );
+        $PAGE->requires->js_call_amd(constants::M_COMPONENT . "/submissionhelper", 'init', array($opts));
+        $PAGE->requires->strings_for_js(array('reallydeletesubmission','clicktohide','clicktoshow'),constants::M_COMPONENT);
+
+        //Get our renderers
+        $renderer = $PAGE->get_renderer(constants::M_COMPONENT);
 
         $submissionid = $submission ? $submission->id : 0;
 
 
         if ($submission && get_config(constants::M_COMPONENT, 'showcurrentsubmission')) {
-            $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
-            $size=get_config(constants::M_COMPONENT, 'displaysize_single');
 
             //show the previous submission in a player or whatever
-            $currentsubmission = $this->fetchResponses($submission->id,false);
-            if($currentsubmission != ''){
-                $deletesubmission = "<a href='javascript:void(0);' onclick='M.assignsubmission_onlinepoodll.deletesubmission();'>".
-                    "<img src='" . $CFG->httpswwwroot . '/mod/assign/submission/onlinepoodll/pix/deletebutton.png' .
-                    "' alt='" . get_string('deletesubmission',constants::M_COMPONENT) . "'/>" .
-                    "</a>";
-                $currentsubmission .= $deletesubmission;
+            $responses = $this->fetchResponses($submission->id, false);
+            if ($responses != '') {
+
+                $deletesubmission = $renderer->fetch_delete_submission();
+                //show current submission
+                $currentsubmission = $renderer->prepare_current_submission($responses, $deletesubmission);
+
+                $mform->addElement('static', 'currentsubmission',
+                        get_string('currentsubmission', constants::M_COMPONENT),
+                        $currentsubmission);
+
             }
-            $currentcontainer = 'currentsubmissionwrapper';
-            $currentsubmission = "<div id='" .$currentcontainer. "'>" . $currentsubmission . "</div>";
-			$mform->addElement('static', 'currentsubmission', 
-				get_string('currentsubmission', constants::M_COMPONENT) ,
-				$currentsubmission);
-
-            $opts = array(
-                "filecontrolid"=> constants::M_FILENAMECONTROL,
-                "reallydeletesubmission"=> get_string('reallydeletesubmission',constants::M_COMPONENT),
-                "currentcontainer"=> $currentcontainer
-            );
-
-            $PAGE->requires->js_init_call('M.assignsubmission_onlinepoodll.init',array($opts),false);
         }
         
          if (!isset($data->vectordata)) {
@@ -399,11 +397,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 	*/
 	function fetchResponses($submissionid, $checkfordata=false){
 		global $CFG;
-		
 
 		$responsestring = "";
-
-		
 		
 		//get filename, from the filearea for this submission. 
 		//there should be only one.
@@ -491,9 +486,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 					break;	
 				
 			}//end of switch
-		}//end of if (checkfordata ...) 
-		
-		
+		}//end of if (checkfordata ...)
 		
 		return $responsestring;
 		
