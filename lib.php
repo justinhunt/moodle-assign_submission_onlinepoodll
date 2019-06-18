@@ -61,7 +61,9 @@ function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context
 		}
 
 		// check is users submission or has grading permission
-		if ($USER->id != $userid and !has_capability('mod/assign:grade', $context)) {
+		if ($USER->id != $userid and
+                !has_capability('mod/assign:grade', $context) &&
+                !has_capability('assignsubmission/onlinepoodll:reviewsubmissions', $context)) {
 			return false;
 		}
 	}

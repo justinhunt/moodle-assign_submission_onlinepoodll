@@ -1,7 +1,11 @@
 Change List
 =========
+3.1.3 (Build 2019061800)
+-Added a new capability 'reviewsubmissions' allows users. Use to allow playback of recordings even without grade permission
+
 3.1.2 (Build 2019052000)
 -Implemented "Remove Submission" feature
+-Added toggle current submission and better delete submission on edit page
 
 3.1.1 (Build 2018113000)
 -Improved support for privacy api

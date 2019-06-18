@@ -31,4 +31,13 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW
         ),
     ),
+    'assignsubmission/onlinepoodll:reviewsubmissions' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_COURSE,
+                'archetypes' => array(
+                        'manager' => CAP_ALLOW,
+                        'editingteacher' => CAP_ALLOW,
+                        'teacher' => CAP_ALLOW
+                ),
+    )
 );

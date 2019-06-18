@@ -78,6 +78,7 @@ $string['deletesubmission'] = 'Delete this submission.';
 $string['reallydeletesubmission'] = 'Really delete this submission?';
 
 $string['onlinepoodll:use'] = 'Allow use of Online Poodll submissions';
+$string['onlinepoodll:reviewsubmissions'] = 'Can review Online Poodll submissions(recordings)';
 $string['privacy:metadata'] = 'The Poodll Online Assignment Submission plugin does store personal data.';
 $string['privacy:metadata:filepurpose'] = 'The recordings (Poodll file submissions) for this assignment submission.';
 
