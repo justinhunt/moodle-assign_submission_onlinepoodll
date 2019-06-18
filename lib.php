@@ -37,7 +37,7 @@ use assignsubmission_onlinepoodll\constants;
  * @return bool false if file not found, does not return if found - just send the file
  */
 function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload) {
-    global $USER, $DB;
+    global $CFG, $USER, $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
@@ -45,23 +45,36 @@ function assignsubmission_onlinepoodll_pluginfile($course, $cm, context $context
 
     require_login($course, false, $cm);
     $itemid = (int)array_shift($args);
+
+    require_once($CFG->dirroot . '/mod/assign/locallib.php');
+    $assign = new assign($context, $cm, $course);
 	
 	//back image is a special case
 	if(!($itemid==0 && $filearea=constants::M_WB_FILEAREA)){
 
-		$record = $DB->get_record('assign_submission', array('id'=>$itemid), 'userid, assignment', MUST_EXIST);
+		$record = $DB->get_record('assign_submission', array('id'=>$itemid), 'userid, assignment, groupid', MUST_EXIST);
 		$userid = $record->userid;
+        $groupid = $record->groupid;
 
-		if (!$assign = $DB->get_record('assign', array('id'=>$cm->instance))) {
+		$instance =$assign->get_instance();
+
+		if ($instance->id != $record->assignment) {
 			return false;
 		}
 
-		if ($assign->id != $record->assignment) {
-			return false;
-		}
+        if ($instance->teamsubmission &&
+                !$assign->can_view_group_submission($groupid)) {
+            return false;
+        }
+
+        if (!$instance->teamsubmission &&
+                !$assign->can_view_submission($userid)) {
+            return false;
+        }
 
 		// check is users submission or has grading permission
-		if ($USER->id != $userid and
+		if ($USER->id != $userid &&
+                !$instance->teamsubmission &&
                 !has_capability('mod/assign:grade', $context) &&
                 !has_capability('assignsubmission/onlinepoodll:reviewsubmissions', $context)) {
 			return false;
