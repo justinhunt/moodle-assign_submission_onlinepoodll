@@ -1,5 +1,10 @@
 Change List
 =========
+3.1.4 (Build 2019081000)
+-Added 'active' setting, allowing submission to be set as inactive (students cant submit new or edit old)
+-Added better options for display of current submission (expanded or minimized or always). If 'always' recorder is minimised.
+-Added custom name setting so submission can have a name teachers and students understand
+
 3.1.3 (Build 2019061800)
 -Added a new capability 'reviewsubmissions' allows users. Use to allow playback of recordings even without grade permission
 -Fixed broken teamsubmissions (group)

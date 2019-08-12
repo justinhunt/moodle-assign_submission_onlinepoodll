@@ -23,6 +23,7 @@
  */
 
 use assignsubmission_onlinepoodll\constants;
+use assignsubmission_onlinepoodll\utils;
 
 	//enable by default
 	$settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/default',
@@ -31,29 +32,31 @@ use assignsubmission_onlinepoodll\constants;
                    
 
 	//Recorders
-   $rec_options = array( constants::M_REPLYMP3VOICE => get_string("replymp3voice", constants::M_COMPONENT),
-				constants::M_REPLYVOICE => get_string("replyvoice", constants::M_COMPONENT),
-				constants::M_REPLYVIDEO => get_string("replyvideo", constants::M_COMPONENT),
-				constants::M_REPLYWHITEBOARD => get_string("replywhiteboard", constants::M_COMPONENT),
-				constants::M_REPLYSNAPSHOT => get_string("replysnapshot", constants::M_COMPONENT));
+   $rec_options = utils::fetch_options_recorders();
 	$rec_defaults = array(constants::M_REPLYMP3VOICE  => 1, constants::M_REPLYVIDEO => 1 , constants::M_REPLYVOICE => 1,constants::M_REPLYWHITEBOARD => 1,constants::M_REPLYSNAPSHOT => 1);
 	$settings->add(new admin_setting_configmulticheckbox(constants::M_COMPONENT . '/allowedrecorders',
 						   get_string('allowedrecorders', constants::M_COMPONENT),
 						   get_string('allowedrecordersdetails', constants::M_COMPONENT), $rec_defaults,$rec_options));
 						   
 	//show current submission on submission form
-	$yesno_options = array( 0 => get_string("no", constants::M_COMPONENT),
-				1 => get_string("yes", constants::M_COMPONENT));
+	$cs_options = utils::fetch_options_currentsubmission();
 	$settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/showcurrentsubmission',
 					new lang_string('showcurrentsubmission', constants::M_COMPONENT),
-					new lang_string('showcurrentsubmissiondetails', constants::M_COMPONENT), 1, $yesno_options));
+					new lang_string('showcurrentsubmissiondetails', constants::M_COMPONENT),
+            constants::M_CURRENTSUBMISSION_SHOWMINIMIZED, $cs_options));
 
+	//allow user to set a custom name for the plugin as displayed to users
+    $settings->add(new admin_setting_configtext(constants::M_COMPONENT . '/customname',
+            new lang_string('customname', constants::M_COMPONENT),
+            new lang_string('customnamedetails', constants::M_COMPONENT),
+            '', PARAM_TEXT));
 
     //Settings for audio recordings
     $settings->add(new admin_setting_heading(constants::M_COMPONENT . '/audio_heading',
     get_string('setting_audio_heading', constants::M_COMPONENT),
     get_string('setting_audio_heading_details', constants::M_COMPONENT)));
 
+    $yesno_options=utils::fetch_options_yesno();
     $settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/displayaudioplayer_single',
     new lang_string('displayaudioplayersingle', constants::M_COMPONENT),
     '', '1', $yesno_options));

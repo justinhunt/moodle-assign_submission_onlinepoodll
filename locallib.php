@@ -28,6 +28,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use assignsubmission_onlinepoodll\constants;
+use assignsubmission_onlinepoodll\utils;
 
 
 /**
@@ -55,15 +56,19 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
   }
 		
     /**
-     * Get the name of the online text submission plugin
+     * Get the name of the online text submission plugin. It could be a custom name
      * @return string
      */
     public function get_name() {
-        return get_string('onlinepoodll', constants::M_COMPONENT);
+        if(get_config(constants::M_COMPONENT,'customname')){
+            return get_config(constants::M_COMPONENT,'customname');
+        }else {
+            return get_string('onlinepoodll', constants::M_COMPONENT);
+        }
     }
 
-	    /**
-     * Get the settings for Onbline PoodLLsubmission plugin form
+	 /**
+     * Get the settings for Online PoodLLsubmission plugin form
      *
      * @global stdClass $CFG
      * @global stdClass $COURSE
@@ -83,6 +88,15 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$boardsize = $this->get_config('boardsize');
 		$backimage = $this->get_config('backimage');
 		$timelimit = $this->get_config('timelimit');
+        $active = $this->get_config('active');
+        if($active===false){
+            $active = 1;
+        }
+        $currentsubmission = $this->get_config('showcurrentsubmission');
+        if($currentsubmission===false){
+            $currentsubmission = get_config(constants::M_COMPONENT, 'showcurrentsubmission');
+        }
+
       
       
        //get allowed recorders from admin settings
@@ -115,8 +129,23 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
 		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
 		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
-	  
-	  //these are for the whiteboard submission
+
+
+		$csoptions = utils::fetch_options_currentsubmission();
+        $mform->addElement('select', constants::M_COMPONENT . '_showcurrentsubmission', get_string("currentsubmission", constants::M_COMPONENT), $csoptions);
+        //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
+        $mform->setDefault(constants::M_COMPONENT . '_showcurrentsubmission', $currentsubmission);
+        $mform->disabledIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+
+
+        $yesnooptions = utils::fetch_options_yesno();
+        $mform->addElement('select', constants::M_COMPONENT . '_active', get_string("active", constants::M_COMPONENT), $yesnooptions);
+        //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
+        $mform->setDefault(constants::M_COMPONENT . '_active', $active);
+        $mform->disabledIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
+        $mform->addHelpButton(constants::M_COMPONENT . '_active','active', constants::M_COMPONENT);
+
+        //these are for the whiteboard submission
 	  // added Justin 20121216 back image, and boardsizes, part of whiteboard response
 		//For the back image, we 
 		//(i) first have to load existing back image files into a draft area
@@ -176,21 +205,33 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
      * @return bool 
      */
     public function save_settings(stdClass $data) {
-        $this->set_config('recordertype', $data->assignsubmission_onlinepoodll_recordertype);
+        $this->set_config('recordertype', $data->{constants::M_COMPONENT . '_recordertype'});
 		//if we have a board size, set it
-		if(isset($data->assignsubmission_onlinepoodll_boardsize)){
-			$this->set_config('boardsize', $data->assignsubmission_onlinepoodll_boardsize);
+		if(isset($data->{constants::M_COMPONENT . '_boardsize'})){
+			$this->set_config('boardsize', $data->{constants::M_COMPONENT . '_boardsize'});
 		}else{
 			$this->set_config('boardsize', '320x320');
 		}
 		
 		//if we have a time limit, set it
-		if(isset($data->assignsubmission_onlinepoodll_timelimit)){
-			$this->set_config('timelimit', $data->assignsubmission_onlinepoodll_timelimit);
+		if(isset($data->{constants::M_COMPONENT . '_timelimit'})){
+			$this->set_config('timelimit', $data->{constants::M_COMPONENT . '_timelimit'});
 		}else{
 			$this->set_config('timelimit', 0);
 		}
-		
+
+		//active
+        if(isset($data->{constants::M_COMPONENT . '_active'})){
+            $this->set_config('active', $data->{constants::M_COMPONENT . '_active'});
+        }else{
+            $this->set_config('active', 1);
+        }
+        //current submission
+        if(isset($data->{constants::M_COMPONENT . '_showcurrentsubmission'})){
+            $this->set_config('showcurrentsubmission', $data->{constants::M_COMPONENT . '_showcurrentsubmission'});
+        }else{
+            $this->set_config('showcurrentsubmission', 1);
+        }
 		
 		// $this->set_config('backimage', $data->assignsubmission_onlinepoodll_backimage);
 		//error_log(print_r($this->assignment,true));
@@ -245,10 +286,34 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     public function get_form_elements($submission, MoodleQuickForm $mform, stdClass $data) {
 		 global $CFG, $USER, $PAGE;
 
+        //active
+        $active = $this->get_config('active');
+        if($active===false){
+            $active=1;
+        }
+        //current submission
+        $showcurrentsubmission = $this->get_config('showcurrentsubmission');
+        if($showcurrentsubmission===false){
+            $showcurrentsubmission=get_config(constants::M_COMPONENT, 'showcurrentsubmission');
+        }
+
+        //determine if toggling recorder or current submission
+        switch($showcurrentsubmission){
+            case constants::M_CURRENTSUBMISSION_ALWAYS:
+                $togglingthing = 'recorder';
+                break;
+            case constants::M_CURRENTSUBMISSION_SHOWEXPANDED:
+            case constants::M_CURRENTSUBMISSION_SHOWMINIMIZED:
+            default:
+                $togglingthing = 'currentsubmission';
+        }
+
         //prepare the AMD javascript for deletesubmission  and toggle
         $opts = array(
                 "component"=> constants::M_COMPONENT,
-                "filecontrolid"=> constants::M_FILENAMECONTROL
+                "filecontrolid"=> constants::M_FILENAMECONTROL,
+                "expandcurrentsubmission"=>($showcurrentsubmission==constants::M_CURRENTSUBMISSION_SHOWEXPANDED),
+                "togglingthing"=> $togglingthing,
         );
         $PAGE->requires->js_call_amd(constants::M_COMPONENT . "/submissionhelper", 'init', array($opts));
         $PAGE->requires->strings_for_js(array('reallydeletesubmission','clicktohide','clicktoshow'),constants::M_COMPONENT);
@@ -257,17 +322,26 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         $renderer = $PAGE->get_renderer(constants::M_COMPONENT);
 
         $submissionid = $submission ? $submission->id : 0;
+        $responses = '';
 
-
-        if ($submission && get_config(constants::M_COMPONENT, 'showcurrentsubmission')) {
+        if ($submission && $showcurrentsubmission) {
 
             //show the previous submission in a player or whatever
             $responses = $this->fetchResponses($submission->id, false);
             if ($responses != '') {
 
-                $deletesubmission = $renderer->fetch_delete_submission();
+                if($active) {
+                    $deletesubmission = $renderer->fetch_delete_submission();
+                }else{
+                    $deletesubmission = '';
+                }
                 //show current submission
-                $currentsubmission = $renderer->prepare_current_submission($responses, $deletesubmission);
+                $currentsubmission = $renderer->prepare_current_submission($responses, $deletesubmission,$showcurrentsubmission);
+
+                //are we toggling current submission
+                if($togglingthing == 'currentsubmission'){
+                    $currentsubmission = $renderer->prepare_toggle_controls() . $currentsubmission;
+                }
 
                 $mform->addElement('static', 'currentsubmission',
                         get_string('currentsubmission', constants::M_COMPONENT),
@@ -311,20 +385,34 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->setType(constants::M_VECTORCONTROL, PARAM_TEXT);
 
 
+		//if this is inactive we do not want to show the recorders, so we just return here
+		if(!$active){
+		    return true;
+        }
+
 	
 		//get timelimit for recorders if set
 		$timelimit = $this->get_config('timelimit');
 		$hints = Array();
 		$hints['modulecontextid']=$contextid;
 		$callbackjs =false;
-		//fetch the required "recorder
+
+        //are we toggling recorder
+        $toggler = '';
+        if($togglingthing == 'recorder' && $submission && $responses != ''){
+            $toggler = $renderer->prepare_toggle_controls();
+        }
+
+
+        //fetch the required "recorder
 		switch($this->get_config('recordertype')){
 
             case constants::M_REPLYVOICE:
 			case constants::M_REPLYMP3VOICE:
 				$mediadata= \filter_poodll\poodlltools::fetchMP3RecorderForSubmission(constants::M_FILENAMECONTROL, $usercontextid ,
                     'user','draft',$draftitemid,$timelimit,$callbackjs,$hints);
-				$mform->addElement('static', 'description', '',$mediadata);
+                $mediadiv = $toggler . $renderer->prepare_recorder($mediadata,$showcurrentsubmission,$toggler);
+                $mform->addElement('static', 'description', get_string('replymp3voice',constants::M_COMPONENT),$mediadiv);
 				break;
 				
 			case constants::M_REPLYWHITEBOARD:
@@ -363,18 +451,21 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				$vectorcontrol = constants::M_VECTORCONTROL;
 				$vectordata=$data->vectordata;
 				$mediadata= \filter_poodll\poodlltools::fetchWhiteboardForSubmission(constants::M_FILENAMECONTROL, $usercontextid ,'user','draft',$draftitemid, $width, $height, $imageurl,'','',$vectorcontrol,$vectordata);
-				$mform->addElement('static', 'description', '',$mediadata);
+                $mediadiv = $toggler . $renderer->prepare_recorder($mediadata,$showcurrentsubmission,$toggler);
+				$mform->addElement('static', 'description', get_string('replywhiteboard',constants::M_COMPONENT),$mediadiv);
 				break;
 			
 			case constants::M_REPLYSNAPSHOT:
 				$mediadata= \filter_poodll\poodlltools::fetchHTML5SnapshotCamera(constants::M_FILENAMECONTROL,350,400,$usercontextid,'user','draft',$draftitemid);
-				$mform->addElement('static', 'description', '',$mediadata);
+                $mediadiv = $toggler . $renderer->prepare_recorder($mediadata,$showcurrentsubmission,$toggler);
+				$mform->addElement('static', 'description', get_string('replysnapshot',constants::M_COMPONENT),$mediadiv);
 				break;
 
 			case constants::M_REPLYVIDEO:
 				$mediadata= \filter_poodll\poodlltools::fetchVideoRecorderForSubmission('swf','onlinepoodll',constants::M_FILENAMECONTROL,
                     $usercontextid ,'user','draft',$draftitemid,$timelimit,$callbackjs,$hints);
-				$mform->addElement('static', 'description', '',$mediadata);			
+                $mediadiv = $toggler . $renderer->prepare_recorder($mediadata,$showcurrentsubmission,$toggler);
+				$mform->addElement('static', 'description', get_string('replyvideo',constants::M_COMPONENT),$mediadiv);
 									
 				break;
 					
@@ -384,10 +475,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         //$mform->addElement('hidden', 'id', 0);
         //$mform->setType('id', PARAM_INT);
 		return true;
-
     }
-
-	
 	
 	/*
 	* Fetch the player to show the submitted recording(s)
@@ -963,8 +1051,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
      */
     public function get_file_areas() {
   
-        return array(constants::M_FILEAREA=>$this->get_name(),
-        	constants::M_WB_FILEAREA=>$this->get_name() . " whiteboard backimage");
+        return array(constants::M_FILEAREA=>constants::M_COMPONENT,
+        	constants::M_WB_FILEAREA=>constants::M_COMPONENT . " whiteboard backimage");
     }
 
 }
