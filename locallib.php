@@ -78,6 +78,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     public function get_settings(MoodleQuickForm $mform) {
         global $CFG, $COURSE;
 
+
+        $mform->addElement('static',constants::M_COMPONENT . '_divider', '','-------------  ' . $this->get_name() . '  -------------' );
+
         $recordertype = $this->get_config('recordertype');
 
         //convert old Red5 refs to audio media type option
@@ -195,6 +198,8 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 			$mform->addElement('hidden', constants::M_COMPONENT . '_boardsize',$boardsize);
 		}
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
+
+        $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '','--------------------------' );
 
     }
     
