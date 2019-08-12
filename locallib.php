@@ -79,7 +79,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         global $CFG, $COURSE;
 
 
-        $mform->addElement('static',constants::M_COMPONENT . '_divider', '','-------------  ' . $this->get_name() . '  -------------' );
+        $mform->addElement('static',constants::M_COMPONENT . '_divider', '',get_string('divider',constants::M_COMPONENT,$this->get_name()));
 
         $recordertype = $this->get_config('recordertype');
 
@@ -199,7 +199,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
 
-        $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '','--------------------------' );
+        $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '',get_string('divider',constants::M_COMPONENT,''));
 
     }
     
