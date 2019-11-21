@@ -93,3 +93,4 @@ $string['showalways']= "Show Always (minimize recorder)";
 $string['active']= "Active";
 $string['active_help']= "If not active, students can not add or edit Online Poodll submissions. But existing submissions are still available.";
 $string['divider']= '---------------{$a}----------------';
+$string['customdivider']= '---------------{$a->customname} ("{$a->pluginname}")----------------';

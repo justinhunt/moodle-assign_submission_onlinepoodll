@@ -78,8 +78,19 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     public function get_settings(MoodleQuickForm $mform) {
         global $CFG, $COURSE;
 
+        //start out with a divider to make it clear which plugin's settings these are
+        $pluginname = get_string('onlinepoodll',constants::M_COMPONENT);
+        $customname = get_config(constants::M_COMPONENT, 'customname');
+        if(!empty($customname)){
+            $args =new stdClass();
+            $args->pluginname = $pluginname;
+            $args->customname = $customname;
+            $divider = get_string('customdivider', constants::M_COMPONENT,$args);
+        }else{
+            $divider = get_string('divider',constants::M_COMPONENT,$pluginname);
+        }
 
-        $mform->addElement('static',constants::M_COMPONENT . '_divider', '',get_string('divider',constants::M_COMPONENT,$this->get_name()));
+        $mform->addElement('static',constants::M_COMPONENT . '_divider', '',$divider);
 
         $recordertype = $this->get_config('recordertype');
 
