@@ -137,6 +137,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         $mform->setDefault(constants::M_COMPONENT . '_recordertype', $recordertype);
 		$mform->disabledIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
 
+
 		//Add a place to set a maximum recording time.
 	   $mform->addElement('duration', constants::M_COMPONENT . '_timelimit', get_string('timelimit', constants::M_COMPONENT));
        $mform->setDefault(constants::M_COMPONENT . '_timelimit', $timelimit);
@@ -211,6 +212,31 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
 
         $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '',get_string('divider',constants::M_COMPONENT,''));
+
+        //If  M3.6 or higher we can hide unneeded elements
+        if($CFG->version >= 2018120300) {
+            $mform->hideIf(constants::M_COMPONENT . '_divider', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_backimage', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_dividerend', constants::M_COMPONENT . '_enabled', 'notchecked');
+
+            //if no audio or video allowed just hide
+            if (array_search(constants::M_REPLYMP3VOICE, $allowed_recorders) === false &&
+                    array_search(constants::M_REPLYVOICE, $allowed_recorders) === false &&
+                    array_search(constants::M_REPLYVIDEO, $allowed_recorders) === false) {
+                $mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'checked');
+            }
+            //if no whiteboard allowed just hide
+            if (array_search(constants::M_REPLYWHITEBOARD, $allowed_recorders) === false) {
+                $mform->hideIf(constants::M_COMPONENT . '_backimage', constants::M_COMPONENT . '_enabled', 'checked');
+                $mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'checked');
+            }
+        }//end of if M3.6
+
 
     }
     

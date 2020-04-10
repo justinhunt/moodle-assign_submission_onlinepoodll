@@ -1,5 +1,8 @@
 Change List
 =========
+3.1.5 (Build 2020041000)
+- added support for hiding settings if not enabled
+
 3.1.5 (Build 2019112100)
 - Added support for custom name in settings divider
 
