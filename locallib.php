@@ -90,7 +90,10 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $divider = get_string('divider',constants::M_COMPONENT,$pluginname);
         }
 
-        $mform->addElement('static',constants::M_COMPONENT . '_divider', '',$divider);
+        //If  M3.4 or lower we show a divider to make it easier to figure where poodll ends and starts
+        if($CFG->version < 2017111300) {
+            $mform->addElement('static', constants::M_COMPONENT . '_divider', '', $divider);
+        }
 
         $recordertype = $this->get_config('recordertype');
 
@@ -211,18 +214,20 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
 
-        $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '',get_string('divider',constants::M_COMPONENT,''));
+        //If  M3.4 or lower we show a divider to make it easier to figure where poodll ends and starts
+        if($CFG->version < 2017111300) {
+            $mform->addElement('static', constants::M_COMPONENT . '_dividerend', '',
+                    get_string('divider', constants::M_COMPONENT, ''));
+        }
 
-        //If  M3.6 or higher we can hide unneeded elements
-        if($CFG->version >= 2018120300) {
-            $mform->hideIf(constants::M_COMPONENT . '_divider', constants::M_COMPONENT . '_enabled', 'notchecked');
+        //If  M3.4 or higher we can hide unneeded elements
+        if($CFG->version >= 2017111300) {
             $mform->hideIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
-            $mform->hideIf(constants::M_COMPONENT . '_backimage', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf('backimage', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
-            $mform->hideIf(constants::M_COMPONENT . '_dividerend', constants::M_COMPONENT . '_enabled', 'notchecked');
 
             //if no audio or video allowed just hide
             if (array_search(constants::M_REPLYMP3VOICE, $allowed_recorders) === false &&
@@ -232,7 +237,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             }
             //if no whiteboard allowed just hide
             if (array_search(constants::M_REPLYWHITEBOARD, $allowed_recorders) === false) {
-                $mform->hideIf(constants::M_COMPONENT . '_backimage', constants::M_COMPONENT . '_enabled', 'checked');
+                $mform->hideIf('backimage', constants::M_COMPONENT . '_enabled', 'checked');
                 $mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'checked');
             }
         }//end of if M3.6
