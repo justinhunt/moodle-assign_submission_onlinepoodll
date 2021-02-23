@@ -13,3 +13,17 @@ button.assignsubmission_onlinepoodll_deletesubmissionbutton {
 .assignsubmission_onlinepoodll_togglecontainer {
     margin-bottom: 8px;
 }
+
+.assignsubmission_onlinepoodll_video_cont {
+    position: relative;
+    padding-bottom: 75%;
+    height: 0;
+}
+
+.assignsubmission_onlinepoodll_video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

@@ -531,7 +531,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 	*
 	*/
 	function fetchResponses($submissionid, $checkfordata=false){
-		global $CFG;
+		global $CFG, $OUTPUT;
 
 		$responsestring = "";
 		
@@ -584,7 +584,10 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                 case constants::M_REPLYVOICE:
 				case constants::M_REPLYMP3VOICE:
 				    if($size) {
-                        $responsestring .= format_text("<a href='$rawmediapath'>$filename</a>", FORMAT_HTML);
+                        $options= new stdClass();
+                        $options->mediaurl = $rawmediapath;
+                        $options->maxwidth='400';
+                        $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/audioplayerstandard', $options);
                     }else{
                         $responsestring=get_string('audioplaceholder',constants::M_COMPONENT);
                     }
@@ -595,7 +598,11 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 							$responsestring=get_string('videoplaceholder',constants::M_COMPONENT);
 							break;
 						}
-						$responsestring .= format_text("<a href='$rawmediapath?d=$size->width" . 'x' . "$size->height'>$filename</a>", FORMAT_HTML);
+					    $options= new stdClass();
+					    $options->mediaurl = $rawmediapath;
+                        $options->maxwidth=$size->width;
+                        $options->maxheight=$size->height;
+                        $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/videoplayerstandard', $options);
 						break;
 
 				case constants::M_REPLYWHITEBOARD:
