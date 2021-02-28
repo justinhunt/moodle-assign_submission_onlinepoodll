@@ -79,11 +79,11 @@ use assignsubmission_onlinepoodll\utils;
 				
 	$settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displaysize_single', 
 						new lang_string('displaysizesingle', 'assignsubmission_onlinepoodll'), 
-						new lang_string('displaysizesingledetails', 'assignsubmission_onlinepoodll'), '320', $size_options));
+						new lang_string('displaysizesingledetails', 'assignsubmission_onlinepoodll'), '480', $size_options));
 
 	$settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displaysize_list', 
 						new lang_string('displaysizelist', 'assignsubmission_onlinepoodll'), 
-						new lang_string('displaysizelistdetails', 'assignsubmission_onlinepoodll'), '0', $size_options));
+						new lang_string('displaysizelistdetails', 'assignsubmission_onlinepoodll'), '480', $size_options));
 
     //The width of an image
     $width_options = array('0' => new lang_string('shownoimage', 'assignsubmission_onlinepoodll'),
