@@ -586,7 +586,6 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				    if($size) {
                         $options= new stdClass();
                         $options->mediaurl = $rawmediapath;
-                        $options->maxwidth='400';
                         $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/audioplayerstandard', $options);
                     }else{
                         $responsestring=get_string('audioplaceholder',constants::M_COMPONENT);
@@ -600,8 +599,6 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 						}
 					    $options= new stdClass();
 					    $options->mediaurl = $rawmediapath;
-                        $options->maxwidth=$size->width;
-                        $options->maxheight=$size->height;
                         $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/videoplayerstandard', $options);
 						break;
 

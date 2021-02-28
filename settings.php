@@ -75,8 +75,7 @@ use assignsubmission_onlinepoodll\utils;
 
     //The size of the video player on the various screens
 	$size_options = array('0' => new lang_string('shownovideo', 'assignsubmission_onlinepoodll'),
-					'160' => '160x120', '320' => '320x240','480' => '480x360',
-					'640' => '640x480','800'=>'800x600','1024'=>'1024x768');
+					'480' => '480x360');
 				
 	$settings->add(new admin_setting_configselect('assignsubmission_onlinepoodll/displaysize_single', 
 						new lang_string('displaysizesingle', 'assignsubmission_onlinepoodll'), 
