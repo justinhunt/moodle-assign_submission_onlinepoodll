@@ -586,6 +586,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 				    if($size) {
                         $options= new stdClass();
                         $options->mediaurl = $rawmediapath;
+                        $options->islist = $this->is_list();
                         $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/audioplayerstandard', $options);
                     }else{
                         $responsestring=get_string('audioplaceholder',constants::M_COMPONENT);
@@ -599,6 +600,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 						}
 					    $options= new stdClass();
 					    $options->mediaurl = $rawmediapath;
+                        $options->islist = $this->is_list();
                         $responsestring .=$OUTPUT->render_from_template(constants::M_COMPONENT . '/videoplayerstandard', $options);
 						break;
 
@@ -634,7 +636,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
     public function	fetch_response_size($recordertype){
 
 	        //is this a list view
-            $islist = optional_param('action','',PARAM_TEXT)=='grading';
+            $islist = $this->is_list();
 
             //build our sizes array
             $sizes=array();
@@ -671,6 +673,11 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         }//end of switch
         return $size;
 
+    }
+
+    public function is_list (){
+        //is this a list view
+        return optional_param('action','',PARAM_TEXT)=='grading';
     }
 	
      /**
