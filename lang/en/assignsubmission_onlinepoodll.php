@@ -94,3 +94,4 @@ $string['active']= "Active";
 $string['active_help']= "If not active, students can not add or edit Online Poodll submissions. But existing submissions are still available.";
 $string['divider']= '---------------{$a}----------------';
 $string['customdivider']= '---------------{$a->customname} ("{$a->pluginname}")----------------';
+$string['safesave'] = 'Enable Safe Save - disables assignment submit button until Poodll recording upload is complete. ';

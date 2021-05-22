@@ -15,6 +15,7 @@ define(['jquery','core/log','core/str'], function($,log,str) {
             this.component = opts['component'];
             this.filecontrolid = opts['filecontrolid'];
             this.togglingthing = opts['togglingthing'];
+            this.safesave=opts['safesave'];
             this.register_controls();
             this.register_events();
 
@@ -30,6 +31,7 @@ define(['jquery','core/log','core/str'], function($,log,str) {
         register_controls: function(){
           var that=this;
           this.controls={};
+          this.controls.formsubmitbutton = $('#id_submitbutton');
           this.controls.deletebutton = $('.' + this.component + '_deletesubmissionbutton');
           this.controls.updatecontrol =  $('#' + this.filecontrolid);
           this.controls.currentcontainer =  $('.' + this.component + '_currentsubmission');
@@ -37,6 +39,51 @@ define(['jquery','core/log','core/str'], function($,log,str) {
           this.controls.togglecontainer =  $('.' + this.component + '_togglecontainer');
           this.controls.togglebutton =  $('.' + this.component + '_togglecontainer .togglebutton');
           this.controls.toggletext =  $('.' + this.component + '_togglecontainer .toggletext');
+
+            var that = this;
+            var prassigsub = function (evt) {
+                if(evt){
+                    switch(evt[1]) {
+                        case 'filesubmitted':
+                            var filename = evt[2];
+                            var updatecontrol = evt[3];
+                            // post a custom event that a filter template might be interested in
+                            var prassigsubUploaded = new CustomEvent("prassigsubUploaded", {details: evt});
+                            document.dispatchEvent(prassigsubUploaded);
+
+                            //if opts safe save
+                            if(that.safesave==1) {
+                                that.controls.formsubmitbutton.removeAttr('disabled');
+                            }
+
+                            //poke the filename
+                            var upc = '';
+                            if (typeof updatecontrol !== 'undefined' && updatecontrol !== '') {
+                                upc = $('[id="' + updatecontrol + '"]');
+                            }
+                            if (upc.length < 1) {
+                                upc = $('[id="' + updatecontrol + '"]', window.parent.document);
+                            }
+                            if (upc.length > 0) {
+                                upc.get(0).value = filename;
+                            } else {
+                                log.debug('upload failed #2');
+                                return false;
+                            }
+                            upc.trigger('change');
+                            break;
+                        case 'started':
+                            //if opts safe save
+                            if(that.safesave==1) {
+                                that.controls.formsubmitbutton.attr('disabled', 'disabled');;
+                            }
+
+                            break;
+                    }
+                }
+            }; //end of callback function
+            window.prassigsub = prassigsub;
+
 
 
             str.get_string('clicktohide',that.component).done(function(s) {

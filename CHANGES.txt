@@ -1,5 +1,8 @@
 Change List
 =========
+3.1.9 (Build 2021052200)
+- Added SafeSave feature
+
 3.1.8 (Build 2021032400)
 -Fixes for broke playback on Safari browsers
 

@@ -105,6 +105,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$boardsize = $this->get_config('boardsize');
 		$backimage = $this->get_config('backimage');
 		$timelimit = $this->get_config('timelimit');
+        $safesave= $this->get_config('safesave');
         $active = $this->get_config('active');
         if($active===false){
             $active = 1;
@@ -113,8 +114,6 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         if($currentsubmission===false){
             $currentsubmission = get_config(constants::M_COMPONENT, 'showcurrentsubmission');
         }
-
-      
       
        //get allowed recorders from admin settings
 		$allowed_recorders = get_config(constants::M_COMPONENT, 'allowedrecorders');
@@ -149,7 +148,14 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
 
 
-		$csoptions = utils::fetch_options_currentsubmission();
+        //safe save settings
+        $mform->addElement('advcheckbox', constants::M_COMPONENT . '_safesave', get_string("safesave", constants::M_COMPONENT));
+        $mform->setDefault(constants::M_COMPONENT . '_safesave', $safesave);
+        $mform->disabledIf(constants::M_COMPONENT . '_safesave', constants::M_COMPONENT . '_enabled', 'notchecked');
+
+
+
+        $csoptions = utils::fetch_options_currentsubmission();
         $mform->addElement('select', constants::M_COMPONENT . '_showcurrentsubmission', get_string("currentsubmission", constants::M_COMPONENT), $csoptions);
         //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
         $mform->setDefault(constants::M_COMPONENT . '_showcurrentsubmission', $currentsubmission);
@@ -225,6 +231,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $mform->hideIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+            $mform->hideIf(constants::M_COMPONENT . '_safesave', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf('backimage', constants::M_COMPONENT . '_enabled', 'notchecked');
             $mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
@@ -266,6 +273,13 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}else{
 			$this->set_config('timelimit', 0);
 		}
+
+        //safesave
+        if(isset($data->{constants::M_COMPONENT . '_safesave'})) {
+            $this->set_config('safesave', $data->{constants::M_COMPONENT . '_safesave'});
+        }else{
+            $this->set_config('safesave', 0);
+        }
 
 		//active
         if(isset($data->{constants::M_COMPONENT . '_active'})){
@@ -361,6 +375,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
                 "filecontrolid"=> constants::M_FILENAMECONTROL,
                 "expandcurrentsubmission"=>($showcurrentsubmission==constants::M_CURRENTSUBMISSION_SHOWEXPANDED),
                 "togglingthing"=> $togglingthing,
+                "safesave"=>$this->get_config('safesave')
         );
         $PAGE->requires->js_call_amd(constants::M_COMPONENT . "/submissionhelper", 'init', array($opts));
         $PAGE->requires->strings_for_js(array('reallydeletesubmission','clicktohide','clicktoshow'),constants::M_COMPONENT);
@@ -442,7 +457,7 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$timelimit = $this->get_config('timelimit');
 		$hints = Array();
 		$hints['modulecontextid']=$contextid;
-		$callbackjs =false;
+		$callbackjs ='prassigsub';
 
         //are we toggling recorder
         $toggler = '';
