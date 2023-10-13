@@ -1,5 +1,8 @@
 Change List
 =========
+3.1.12 (Build 2023101300)
+- removed a deprec. Moodle function
+
 3.1.11 (Build 2021111100)
 - Removed Red5 audio recorder option
 
