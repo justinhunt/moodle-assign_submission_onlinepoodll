@@ -1,5 +1,11 @@
 Change List
 =========
+3.1.12 (Build 2023120800)
+- Fixed bug where the whiteboard backimage file area was configured incorrectly causing problems saving the activity settings when disabled and H5P items with images had recently been added to the course.
+
+3.1.11 (Build 2021111100)
+- Removed Red5 audio recorder option
+
 3.1.10 (Build 2021061100)
 - Re-added cachebuster
 
