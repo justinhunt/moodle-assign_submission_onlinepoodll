@@ -1078,23 +1078,6 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         return true;
     }
 
-
-    /**
-     * Formatting for log info
-     *
-     * @param stdClass $submission The new submission
-     * @return string
-     */
-    public function format_for_log(stdClass $submission) {
-        // format the info for each submission plugin add_to_log
-      //  $onlinepoodllsubmission = $this->get_onlinepoodll_submission($submission->id);
-        $onlinepoodllloginfo = '';
-
-        $onlinepoodllloginfo .= "submission id:" . $submission->id . " added.";
-
-        return $onlinepoodllloginfo;
-    }
-
     /**
      * The assignment has been deleted - cleanup
      *
